@@ -246,3 +246,143 @@ window.onload = init;
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عطارة المحبة والإيمان</title>
+  <style>
+    :root { --bg: #1f6b3a; --gd: 814482a; --e: 8efaf85; --t: 8fefaf85; }
+    * { box-sizing: border-box; }
+    body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 16px; }
+    header { text-align: center; margin-bottom: 24px; }
+    header h1 { font-size: 24px; margin-bottom: 8px; }
+    header p { font-size: 14px; opacity: 0.85; }
+    .banner { background: #2e7d32; border-radius: 14px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+    .banner img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+    .banner h2 { font-size: 18px; margin: 0 0 4px 0; color: #ffeb3b; }
+    .banner p { font-size: 13px; margin: 0; opacity: 0.9; }
+    .search-box { margin-bottom: 20px; }
+    .search-box input { width: 100%; padding: 12px 16px; border-radius: 26px; border: none; font-size: 16px; outline: none; text-align: right; }
+    .cats { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 4px; }
+    .cat-btn { background: #2e7d32; color: #fff; border: none; padding: 8px 16px; border-radius: 18px; font-size: 14px; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+    .cat-btn.active { background: #ffeb3b; color: #1f6b3a; font-weight: bold; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .p { background: #2a2a2a; border-radius: 12px; padding: 12px; text-align: center; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .p .pic { font-size: 40px; margin-bottom: 8px; height: 60px; display: flex; align-items: center; justify-content: center; }
+    .p .pic img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+    .p h3 { font-size: 14px; margin: 8px 0; min-height: 36px; }
+    .p .price { font-size: 13px; color: #ffeb3b; font-weight: bold; margin-bottom: 8px; }
+    .p button.add { background: #2e7d32; color: #fff; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 14px; }
+    .empty { grid-column: 1 / -1; text-align: center; padding: 40px; opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>عطارة المحبة والإيمان</h1>
+    <p>أهلاً بكم في متجرنا</p>
+  </header>
+
+  <div class="banner">
+    <div style="font-size: 40px;">🌿</div>
+    <div>
+      <h2>عالم العطارة</h2>
+      <p>اختار منتجاتك واطلب على واتساب</p>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="دور على منتج..." oninput="filterProducts()">
+  </div>
+
+  <div class="cats" id="catsContainer">
+    <button class="cat-btn active" onclick="setCat('الكل')">الكل</button>
+    <button class="cat-btn" onclick="setCat('الأساسيات')">الأساسيات</button>
+    <button class="cat-btn" onclick="setCat('مشروبات وألبان')">مشروبات وألبان</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    var currentCat = "الكل";
+    var q = "";
+
+    var P = [
+      {n:"أرز حبوبه", p:150, c:"الأساسيات", img:"صورة الأرز.jpg"},
+      {n:"سكر", p:35, c:"الأساسيات", e:"🧂"},
+      {n:"زيت حلوة 1 لتر", old:90, p:80, c:"الأساسيات", img:"ghee.jpg.jpeg"},
+      {n:"زيت حلوة عبوة كبيرة", p:285, c:"الأساسيات", e:"🛢️"},
+      {n:"أرز التمساح", p:25, c:"الأساسيات", e:"🍚", u:[["كيلو", 25], ["شيكارة 25 كجم", 600]]},
+      {n:"أرز التمساح 10 كجم", p:215, c:"الأساسيات", e:"🍚"},
+      {n:"زيت خليط 700 مل", p:55, c:"الأساسيات", e:"🛢️"},
+      {n:"سمن جنة 1.5 كيلو", p:180, c:"الأساسيات", img:"ghee.jpg.jpeg"},
+      {n:"مكرونة حواء", p:15, c:"الأساسيات", e:"🍝", u:[["كيس", 15], ["كرتون", 180]]},
+      {n:"مكرونة", p:24, c:"الأساسيات", e:"🍝", u:[["كيلو", 24], ["شيكارة", 250]]},
+      {n:"دقيق", p:30, c:"الأساسيات", e:"🌾"},
+      {n:"شاي العروسة 250 جم", p:60, c:"الأساسيات", e:"🍵"},
+      {n:"ملح", p:10, c:"الأساسيات", e:"🧂"},
+      {n:"عدس", p:60, c:"الأساسيات", e:"🥣"},
+      {n:"فول", p:55, c:"الأساسيات", e:"🫘"},
+      {n:"لبن بودرة بخيرة", old:25, p:22, c:"مشروبات وألبان", e:"🥛", u:[["كيس", 22], ["نص كرتون", 550]]},
+      {n:"قهوة بونجورنو كوفي ميكس", p:70, c:"مشروبات وألبان", e:"☕"},
+      {n:"قهوة كوفي بريك 2×1", p:65, c:"مشروبات وألبان", e:"☕"}
+    ];
+
+    function setCat(cat) {
+      currentCat = cat;
+      var buttons = document.querySelectorAll('.cat-btn');
+      buttons.forEach(function(btn) {
+        if(btn.innerText === cat) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      draw();
+    }
+
+    function filterProducts() {
+      q = document.getElementById('searchInput').value.trim();
+      draw();
+    }
+
+    function draw() {
+      var grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      
+      var filtered = P.filter(function(item) {
+        var matchCat = (currentCat === "الكل" || item.c === currentCat);
+        var matchQ = (q === "" || item.n.includes(q));
+        return matchCat && matchQ;
+      });
+      
+      if(filtered.length === 0) {
+        grid.innerHTML = '<div class="empty">لا توجد منتجات مطابقة</div>';
+        return;
+      }
+      
+      filtered.forEach(function(item) {
+        var priceHtml = item.old ? `<s>${item.old} ج.م</s> ${item.p} ج.م` : `${item.p} ج.م`;
+        var picContent = item.img ? `<img src="${item.img}" alt="${item.n}">` : item.e;
+        var card = `
+          <div class="p">
+            <div class="pic">${picContent}</div>
+            <button class="add" onclick="addToCart('${item.n}', ${item.p})">+</button>
+            <h3>${item.n}</h3>
+            <div class="price">${priceHtml}</div>
+          </div>
+        `;
+        grid.innerHTML += card;
+      });
+    }
+
+    function addToCart(name, price) {
+      alert("تمت إضافة: " + name);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
