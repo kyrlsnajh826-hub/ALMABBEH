@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -12,35 +13,148 @@
     <header class="bg-emerald-600 text-white shadow-md py-4 px-6 mb-8">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold">🛒 متجر المبه (ALMABBEH)</h1>
-            <span class="bg-emerald-700 text-sm px-3 py-1 rounded-full">الوضع المباشر</span>
+            <button onclick="toggleAdminPanel()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm px-4 py-2 rounded-lg font-semibold transition">⚙️ إدارة المنتجات (إضافة وتعديل)</button>
         </div>
     </header>
 
     <main class="container mx-auto px-4 pb-12">
-        <h2 class="text-xl font-semibold mb-6 text-gray-700">قائمة المنتجات والأسعار:</h2>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            
-            <!-- 1. المنتج الأول (عدل الاسم، السعر، ورابط الصورة براحتك) -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between">
+        <!-- لوحة التحكم لإضافة وتعديل المنتجات (مخفية وتظهر عند الضغط على الزرار) -->
+        <div id="admin-panel" class="hidden bg-white p-6 rounded-2xl shadow-lg mb-10 border border-emerald-100">
+            <h3 id="form-title" class="text-xl font-bold mb-4 text-emerald-700">➕ إضافة منتج جديد</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <input type="hidden" id="product-index" value="">
                 <div>
-                    <div class="w-full h-48 bg-gray-200">
-                        <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=500&q=80" alt="اسم المنتج" class="w-full h-48 object-cover">
-                    </div>
-                    <div class="p-4">
-                        <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">القسم</span>
-                        <h3 class="text-lg font-bold mt-2 text-gray-800">اسم المنتج هنا</h3>
-                    </div>
+                    <label class="block text-sm font-semibold mb-1">اسم المنتج</label>
+                    <input type="text" id="p-name" required class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600" placeholder="مثال: أرز مصري">
                 </div>
-                <div class="p-4 pt-0 flex justify-between items-center mt-2">
-                    <span class="text-emerald-600 font-bold text-xl">السعر جنيه</span>
-                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold">أضف للسلة</button>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">السعر (بالجنيه)</label>
+                    <input type="number" id="p-price" required class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600" placeholder="مثال: 25">
                 </div>
-            </div>
-
-            <!-- تقدر تنسخ الكارت اللي فوق وتكرره لأي منتج جديد تلاقيه -->
-
+                <div>
+                    <label class="block text-sm font-semibold mb-1">القسم</label>
+                    <input type="text" id="p-category" required class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600" placeholder="مثال: حبوب">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">رابط الصورة</label>
+                    <input type="url" id="p-image" required class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-600" placeholder="رابط صورة المنتج">
+                </div>
+                <div class="sm:col-span-full flex gap-3 mt-2">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-semibold">حفظ المنتج</button>
+                    <button type="button" onclick="resetForm()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg font-semibold">إلغاء</button>
+                </div>
+            </form>
         </div>
+
+        <h2 class="text-xl font-semibold mb-6 text-gray-700">قائمة المنتجات المعروضة:</h2>
+        
+        <!-- شبكة عرض المنتجات للزباين -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
+
+    <script>
+        // المنتجات الأساسية المخزنة في المتصفح (تتحدث وتتعدل وتضاف براحتك)
+        let products = JSON.parse(localStorage.getItem('almabbeh_products')) || [
+            { name: "أرز", price: 25, category: "حبوب", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=500&q=80" },
+            { name: "زيت حلو 1 بروف", price: 45, category: "زيوت", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" },
+            { name: "مكرونة", price: 15, category: "نشويات", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80" },
+            { name: "شاي العروسة 250 جم", price: 35, category: "مشروبات", image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=500&q=80" },
+            { name: "سمن جنة 1.5 كج", price: 95, category: "دهون ولبنيات", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            if (products.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-10">لا توجد منتجات مضافة حالياً.</p>';
+                return;
+            }
+
+            grid.innerHTML = products.map((p, index) => `
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-48 bg-gray-200">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover">
+                        </div>
+                        <div class="p-4">
+                            <span class="text-xs font-semibold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full">${p.category}</span>
+                            <h3 class="text-lg font-bold mt-2 text-gray-800">${p.name}</h3>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-emerald-600 font-bold text-xl">${p.price} جنيه</span>
+                            <button onclick="alert('تمت إضافة ${p.name} إلى السلة!')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-semibold">أضف للسلة</button>
+                        </div>
+                        <!-- أزرار التعديل والحذف الخاصة بيك -->
+                        <div class="flex gap-2 border-t pt-2">
+                            <button onclick="editProduct(${index})" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 py-1 rounded text-xs font-semibold">✏️ تعديل</button>
+                            <button onclick="deleteProduct(${index})" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-1 rounded text-xs font-semibold">🗑️ حذف</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const index = document.getElementById('product-index').value;
+            const name = document.getElementById('p-name').value;
+            const price = document.getElementById('p-price').value;
+            const category = document.getElementById('p-category').value;
+            const image = document.getElementById('p-image').value;
+
+            const productData = { name, price: Number(price), category, image };
+
+            if (index === "") {
+                // إضافة منتج جديد
+                products.push(productData);
+            } else {
+                // تعديل منتج موجود
+                products[index] = productData;
+            }
+
+            localStorage.setItem('almabbeh_products', JSON.stringify(products));
+            resetForm();
+            renderProducts();
+        }
+
+        function editProduct(index) {
+            const p = products[index];
+            document.getElementById('product-index').value = index;
+            document.getElementById('p-name').value = p.name;
+            document.getElementById('p-price').value = p.price;
+            document.getElementById('p-category').value = p.category;
+            document.getElementById('p-image').value = p.image;
+            document.getElementById('form-title').innerText = "✏️ تعديل المنتج: " + p.name;
+            
+            document.getElementById('admin-panel').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteProduct(index) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+                products.splice(index, 1);
+                localStorage.setItem('almabbeh_products', JSON.stringify(products));
+                renderProducts();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('product-index').value = "";
+            document.getElementById('form-title').innerText = "➕ إضافة منتج جديد";
+            document.getElementById('admin-panel').classList.add('hidden');
+        }
+
+        // تشغيل العرض عند فتح الصفحة
+        renderProducts();
+    </script>
 </body>
 </html>
+
