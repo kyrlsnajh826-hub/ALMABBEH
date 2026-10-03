@@ -3,874 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>عطارة المحبة والإيمان | ALMABBEH</title>
-
+    <title>عطارة المحبة والإيمان | ALMABBEH PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #f7faf9;
-        }
-
-        .hero {
-            background:
-                radial-gradient(circle at top right, rgba(255,255,255,.15), transparent 30%),
-                linear-gradient(135deg, #047857, #064e3b);
-        }
-
-        .product-card {
-            transition: .25s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            scrollbar-width: none;
-        }
-
-        .cart-panel {
-            transition: .3s ease;
-        }
-
-        .overlay {
-            background: rgba(0,0,0,.45);
-            backdrop-filter: blur(3px);
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #059669;
-            box-shadow: 0 0 0 3px rgba(5,150,105,.12);
-        }
+        body { font-family: 'Cairo', sans-serif; background: #f3f4f6; }
+        .glass-hero { background: linear-gradient(135deg, #065f46 0%, #047857 50%, #022c22 100%); }
+        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .cart-panel { transition: transform 0.4s ease-in-out; }
+        .overlay { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); }
     </style>
 </head>
+<body class="text-gray-900 antialiased flex flex-col min-h-screen">
 
-<body class="text-gray-800">
-
-<!-- ================= HEADER ================= -->
-
-<header class="hero text-white shadow-lg sticky top-0 z-40">
-
-    <div class="max-w-7xl mx-auto px-4">
-
-        <div class="flex items-center justify-between py-4 gap-3">
-
-            <div ondblclick="enableAdminMode()" class="cursor-pointer select-none">
-
-                <h1 class="text-xl sm:text-2xl md:text-3xl font-black">
-                    🛒 عطارة المحبة والإيمان
+    <!-- الهيدر الفاخر -->
+    <header class="glass-hero text-white sticky top-0 z-40 shadow-2xl border-b border-emerald-600/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div ondblclick="enableAdminMode()" class="cursor-pointer select-none group" title="اضغط مرتين هنا للدخول كمدير">
+                <h1 class="text-2xl sm:text-3xl font-black tracking-wide flex items-center gap-2">
+                    🌿 عطارة المحبة والإيمان
+                    <span id="admin-indicator" class="hidden text-xs bg-amber-400 text-amber-950 px-2.5 py-1 rounded-full font-bold shadow-sm">المدير نشط</span>
                 </h1>
-
-                <p class="text-emerald-100 text-xs sm:text-sm">
-                    ALMABBEH • جودة ممتازة وأسعار مميزة
-                </p>
-
+                <p class="text-emerald-200 text-xs font-semibold tracking-wider">ALMABBEH RETAIL SYSTEM • فخامة الجودة والأسعار</p>
             </div>
-
-            <button
-                onclick="openCart()"
-                class="relative bg-white text-emerald-800 px-4 py-2.5 rounded-xl font-bold shadow hover:bg-emerald-50 transition">
-
-                🛒 السلة
-
-                <span
-                    id="cart-count"
-                    class="absolute -top-2 -left-2 bg-red-500 text-white text-xs min-w-[22px] h-[22px] rounded-full flex items-center justify-center">
-                    0
-                </span>
-
-            </button>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<!-- ================= HERO ================= -->
-
-<section class="hero text-white">
-
-    <div class="max-w-7xl mx-auto px-4 py-10 md:py-14">
-
-        <div class="max-w-2xl">
-
-            <span class="inline-block bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-sm mb-4">
-                🔥 عروض مستمرة
-            </span>
-
-            <h2 class="text-3xl md:text-5xl font-black leading-tight">
-                كل احتياجات بيتك
-                <br>
-                في مكان واحد
-            </h2>
-
-            <p class="text-emerald-100 mt-4 text-sm md:text-lg">
-                أرز • سمن • زيوت • مكرونة • بقوليات • منتجات عطارة
-            </p>
-
-            <a
-                href="#products"
-                class="inline-block mt-6 bg-white text-emerald-800 px-6 py-3 rounded-xl font-black hover:bg-emerald-50 transition">
-                🛍️ تصفح المنتجات
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= ADMIN PANEL ================= -->
-
-<div
-    id="admin-panel"
-    class="hidden max-w-7xl mx-auto px-4 mt-8">
-
-    <div class="bg-white rounded-3xl shadow-lg border border-emerald-100 p-5 md:p-7">
-
-        <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
-
-            <div>
-                <h2 id="form-title" class="text-xl md:text-2xl font-black text-emerald-800">
-                    ➕ إضافة منتج
-                </h2>
-
-                <p class="text-gray-500 text-sm">
-                    لوحة تحكم المدير
-                </p>
-            </div>
-
-            <button
-                onclick="logoutAdmin()"
-                class="bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold">
-                🔒 قفل
-            </button>
-
-        </div>
-
-        <form
-            id="product-form"
-            onsubmit="saveProduct(event)"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-            <input type="hidden" id="product-index">
-
-            <div>
-                <label class="block text-sm font-bold mb-2">
-                    اسم المنتج
-                </label>
-
-                <input
-                    id="p-name"
-                    required
-                    class="w-full border rounded-xl px-4 py-3"
-                    placeholder="مثال: سمن كريستال 2 كجم">
-            </div>
-
-            <div>
-                <label class="block text-sm font-bold mb-2">
-                    السعر
-                </label>
-
-                <input
-                    id="p-price"
-                    type="number"
-                    step="0.01"
-                    required
-                    class="w-full border rounded-xl px-4 py-3"
-                    placeholder="185">
-            </div>
-
-            <div>
-                <label class="block text-sm font-bold mb-2">
-                    القسم
-                </label>
-
-                <select
-                    id="p-category"
-                    required
-                    class="w-full border rounded-xl px-4 py-3">
-
-                    <option value="">اختر القسم</option>
-                    <option>أرز</option>
-                    <option>سمن</option>
-                    <option>زيوت</option>
-                    <option>مكرونة</option>
-                    <option>بقوليات</option>
-                    <option>عطارة</option>
-                    <option>ياميش</option>
-                    <option>أخرى</option>
-
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-sm font-bold mb-2">
-                    صورة المنتج
-                </label>
-
-                <input
-                    id="p-image-file"
-                    type="file"
-                    accept="image/*"
-                    class="w-full border rounded-xl px-3 py-2 text-sm">
-            </div>
-
-            <div class="md:col-span-2 lg:col-span-4 flex flex-wrap gap-3">
-
-                <button
-                    type="submit"
-                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-7 py-3 rounded-xl font-black">
-                    💾 حفظ المنتج
+            
+            <div class="flex items-center gap-3">
+                <button onclick="openCart()" class="relative bg-white/10 hover:bg-white/25 border border-white/20 text-white px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2 transition backdrop-blur-md shadow-lg">
+                    <span>🛒 السلة</span>
+                    <span id="cart-count" class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-black shadow">0</span>
                 </button>
-
-                <button
-                    type="button"
-                    onclick="resetForm()"
-                    class="bg-gray-100 hover:bg-gray-200 px-7 py-3 rounded-xl font-bold">
-                    إلغاء
-                </button>
-
             </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- ================= PRODUCTS ================= -->
-
-<main
-    id="products"
-    class="max-w-7xl mx-auto px-4 py-10">
-
-    <!-- Search -->
-
-    <div class="bg-white rounded-2xl shadow-sm p-4 mb-6">
-
-        <div class="flex flex-col md:flex-row gap-3">
-
-            <div class="relative flex-1">
-
-                <span class="absolute right-4 top-3.5">
-                    🔎
-                </span>
-
-                <input
-                    id="search-input"
-                    oninput="filterProducts()"
-                    class="w-full border rounded-xl py-3 pr-11 pl-4"
-                    placeholder="ابحث عن المنتج...">
-
-            </div>
-
-            <select
-                id="category-filter"
-                onchange="filterProducts()"
-                class="border rounded-xl px-4 py-3 md:w-52">
-
-                <option value="all">
-                    كل الأقسام
-                </option>
-
-            </select>
-
         </div>
+    </header>
 
-    </div>
-
-
-    <div class="flex justify-between items-center mb-6">
-
-        <div>
-
-            <h2 class="text-2xl md:text-3xl font-black">
-                🛍️ منتجاتنا
-            </h2>
-
-            <p
-                id="products-count"
-                class="text-gray-500 text-sm mt-1">
-                جاري التحميل...
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="products-grid"
-        class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-    </div>
-
-</main>
-
-
-<!-- ================= CART OVERLAY ================= -->
-
-<div
-    id="cart-overlay"
-    onclick="closeCart()"
-    class="hidden fixed inset-0 overlay z-50">
-</div>
-
-
-<!-- ================= CART ================= -->
-
-<aside
-    id="cart-panel"
-    class="fixed top-0 left-0 h-full w-full sm:w-[430px] bg-white z-[60] shadow-2xl -translate-x-full cart-panel">
-
-    <div class="h-full flex flex-col">
-
-        <div class="bg-emerald-700 text-white p-5 flex justify-between items-center">
-
+    <!-- قسم البانر الترحيبي -->
+    <section class="glass-hero text-white py-12 px-4 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-                <h2 class="text-xl font-black">
-                    🛒 سلة الطلب
-                </h2>
-
-                <p class="text-emerald-100 text-xs">
-                    راجع طلبك قبل الإرسال
-                </p>
+                <span class="bg-emerald-500/30 border border-emerald-400/30 text-emerald-200 text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider mb-4 inline-block">✨ النظام الأقوى لإدارة المبيعات</span>
+                <h2 class="text-3xl sm:text-5xl font-black leading-tight mb-4">أجود أنواع العطارة، الحبوب، والمواد الغذائية</h2>
+                <p class="text-emerald-100 text-sm sm:text-base leading-relaxed mb-6">كل ما تحتاجه لبيتك أو متجرك بجودة ممتازة، وأسعار منافسة تناسب الجميع مع خدمة طلب فورية عبر واتساب.</p>
+                <a href="#products-section" class="bg-white text-emerald-900 hover:bg-emerald-50 px-8 py-3.5 rounded-2xl font-extrabold shadow-xl transition inline-block">تصفح المنتجات الآن</a>
             </div>
-
-            <button
-                onclick="closeCart()"
-                class="text-2xl">
-                ✕
-            </button>
-
-        </div>
-
-
-        <div
-            id="cart-items"
-            class="flex-1 overflow-y-auto p-4">
-        </div>
-
-
-        <div class="border-t p-5">
-
-            <div class="flex justify-between text-lg font-black mb-4">
-
-                <span>
-                    الإجمالي
-                </span>
-
-                <span
-                    id="cart-total"
-                    class="text-emerald-700">
-                    0 جنيه
-                </span>
-
-            </div>
-
-            <button
-                onclick="sendWhatsAppOrder()"
-                class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-black">
-                📱 إرسال الطلب عبر واتساب
-            </button>
-
-            <button
-                onclick="clearCart()"
-                class="w-full mt-2 bg-red-50 text-red-600 py-2.5 rounded-xl font-bold">
-                🗑️ تفريغ السلة
-            </button>
-
-        </div>
-
-    </div>
-
-</aside>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer class="bg-gray-900 text-white mt-10">
-
-    <div class="max-w-7xl mx-auto px-4 py-10">
-
-        <div class="grid md:grid-cols-3 gap-8">
-
-            <div>
-
-                <h3 class="text-xl font-black">
-                    عطارة المحبة والإيمان
-                </h3>
-
-                <p class="text-gray-400 text-sm mt-3">
-                    جودة ممتازة وأسعار مميزة.
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h4 class="font-bold mb-3">
-                    أقسام المتجر
-                </h4>
-
-                <p class="text-gray-400 text-sm">
-                    أرز • سمن • زيوت • مكرونة • بقوليات • عطارة
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h4 class="font-bold mb-3">
-                    التواصل
-                </h4>
-
-                <p class="text-gray-400 text-sm">
-                    📱 01140950468
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="border-t border-gray-700 mt-8 pt-5 text-center text-gray-500 text-sm">
-
-            © 2026 عطارة المحبة والإيمان — جميع الحقوق محفوظة
-
-        </div>
-
-    </div>
-
-</footer>
-
-
-<script>
-
-/* ==========================================
-   الإعدادات
-========================================== */
-
-const WHATSAPP_NUMBER = "201140950468";
-
-let isAdmin = false;
-
-let editingIndex = "";
-
-let cart = JSON.parse(localStorage.getItem("almabbeh_cart")) || [];
-
-
-/* ==========================================
-   المنتجات
-========================================== */
-
-let products =
-JSON.parse(localStorage.getItem("almabbeh_products")) || [
-
-    {
-        name: "أرز حبوبه 1 كجم",
-        price: 27,
-        category: "أرز",
-        image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80"
-    },
-
-    {
-        name: "سمن كريستال 2 كجم",
-        price: 185,
-        category: "سمن",
-        image: ""
-    },
-
-    {
-        name: "زيت حلوة 5 لتر",
-        price: 370,
-        category: "زيوت",
-        image: ""
-    },
-
-    {
-        name: "قلية زيت 5 لتر",
-        price: 370,
-        category: "زيوت",
-        image: ""
-    },
-
-    {
-        name: "مكرونة",
-        price: 15,
-        category: "مكرونة",
-        image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80"
-    }
-
-];
-
-
-/* ==========================================
-   الصورة الافتراضية
-========================================== */
-
-function placeholderImage(name) {
-
-    return "https://via.placeholder.com/600x500/e8f5ef/047857?text="
-        + encodeURIComponent(name);
-
-}
-
-
-/* ==========================================
-   عرض المنتجات
-========================================== */
-
-function renderProducts(list = products) {
-
-    const grid =
-        document.getElementById("products-grid");
-
-    const count =
-        document.getElementById("products-count");
-
-
-    count.innerText =
-        `${list.length} منتج متوفر`;
-
-
-    if (!list.length) {
-
-        grid.innerHTML = `
-            <div class="col-span-full text-center py-20">
-
-                <div class="text-5xl mb-4">
-                    🔎
+            <div class="hidden md:flex justify-center">
+                <div class="w-full max-w-md bg-white/10 border border-white/20 backdrop-blur-xl p-6 rounded-3xl shadow-2xl">
+                    <div class="text-emerald-200 font-bold mb-2">💡 معلومات سريعة للرئيس التنفيذي:</div>
+                    <p class="text-sm text-emerald-50 leading-6">اضغط مرتين (Double Click) على عنوان المتجر في أعلى الصفحة ودخل الرقم السري (`123`) لفتح لوحة تحكم المدير، إضافة، تعديل، وحذف أي منتج ورفع الصور مباشرة من جهازك.</p>
                 </div>
-
-                <p class="text-gray-500 font-bold">
-                    لم نجد منتجات بهذا الاسم
-                </p>
-
             </div>
-        `;
+        </div>
+    </section>
 
-        return;
-
-    }
-
-
-    grid.innerHTML = list.map((p) => {
-
-        const realIndex =
-            products.indexOf(p);
-
-        const image =
-            p.image || placeholderImage(p.name);
-
-
-        return `
-
-        <div class="product-card bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-100 flex flex-col">
-
-            <div class="relative h-44 sm:h-52 bg-gray-100">
-
-                <img
-                    src="${image}"
-                    alt="${p.name}"
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                    onerror="this.src='${placeholderImage(p.name)}'">
-
-                <span class="absolute top-3 right-3 bg-white/95 text-emerald-800 px-3 py-1 rounded-full text-xs font-black shadow">
-                    ${p.category}
-                </span>
-
-            </div>
-
-
-            <div class="p-4 flex-1 flex flex-col">
-
-                <h3 class="font-black text-sm sm:text-lg leading-7">
-                    ${p.name}
-                </h3>
-
-
-                <div class="mt-auto pt-4">
-
-                    <div class="flex items-center justify-between gap-2">
-
-                        <span class="text-emerald-700 font-black text-lg sm:text-2xl">
-                            ${p.price}
-                            <small class="text-xs text-gray-500 font-normal">
-                                جنيه
-                            </small>
-                        </span>
-
-
-                        <button
-                            onclick="addToCart(${realIndex})"
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black">
-                            🛒 أضف
-                        </button>
-
-                    </div>
-
-
-                    ${isAdmin ? `
-
-                    <div class="flex gap-2 border-t mt-4 pt-3">
-
-                        <button
-                            onclick="editProduct(${realIndex})"
-                            class="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg text-xs font-bold">
-                            ✏️ تعديل
-                        </button>
-
-                        <button
-                            onclick="deleteProduct(${realIndex})"
-                            class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg text-xs font-bold">
-                            🗑️ حذف
-                        </button>
-
-                    </div>
-
-                    ` : ""}
-
+    <!-- لوحة تحكم المدير السرية -->
+    <div id="admin-panel" class="hidden max-w-7xl mx-auto px-4 mt-8 w-full">
+        <div class="bg-white rounded-3xl shadow-2xl border-2 border-emerald-500/30 p-6 md:p-8">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-gray-100">
+                <div>
+                    <h3 id="form-title" class="text-2xl font-black text-emerald-900">➕ إضافة منتج جديد للمخزون</h3>
+                    <p class="text-gray-500 text-sm">لوحة تحكم المدير الخاصة بالجهاز الواحد</p>
                 </div>
-
+                <button onclick="logoutAdmin()" class="bg-red-50 hover:bg-red-100 text-red-600 px-5 py-2.5 rounded-xl font-bold transition text-sm">🔒 إغلاق لوحة التحكم</button>
             </div>
 
+            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <input type="hidden" id="product-index" value="">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">اسم المنتج</label>
+                    <input type="text" id="p-name" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 focus:bg-white transition" placeholder="مثال: كمون فاخر حصى">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">السعر (بالجنيه)</label>
+                    <input type="number" id="p-price" step="0.01" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 focus:bg-white transition" placeholder="مثال: 50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">القسم</label>
+                    <select id="p-category" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 focus:bg-white transition">
+                        <option value="">اختر القسم المناسب</option>
+                        <option>عطارة وبهارات</option>
+                        <option>حبوب وبقوليات</option>
+                        <option>زيوت وسمن</option>
+                        <option>أرز ومكرونة</option>
+                        <option>مشروبات ومنتجات أخرى</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">صورة المنتج (من جهازك)</label>
+                    <input type="file" id="p-image-file" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition">
+                </div>
+                <div class="sm:col-span-full flex gap-4 pt-2">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-2xl font-extrabold shadow-lg shadow-emerald-600/30 transition">حفظ المنتج في النظام</button>
+                    <button type="button" onclick="resetForm()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3.5 rounded-2xl font-bold transition">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- قسم المنتجات والتصفية -->
+    <main id="products-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="relative w-full md:flex-1">
+                    <span class="absolute right-4 top-3.5 text-gray-400">🔍</span>
+                    <input type="text" id="search-input" oninput="filterProducts()" class="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 pr-12 pl-4 focus:bg-white transition text-sm" placeholder="ابحث عن أي منتج بالاسم...">
+                </div>
+                <div class="w-full md:w-64">
+                    <select id="category-filter" onchange="filterProducts()" class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 focus:bg-white transition text-sm font-bold">
+                        <option value="all">جميع الأقسام والمجموعات</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        `;
-
-    }).join("");
-
-}
-
-
-/* ==========================================
-   الأقسام
-========================================== */
-
-function updateCategories() {
-
-    const select =
-        document.getElementById("category-filter");
-
-    const categories =
-        [...new Set(products.map(p => p.category))];
-
-
-    select.innerHTML = `
-        <option value="all">
-            كل الأقسام
-        </option>
-    `;
-
-
-    categories.forEach(category => {
-
-        select.innerHTML += `
-            <option value="${category}">
-                ${category}
-            </option>
-        `;
-
-    });
-
-}
-
-
-/* ==========================================
-   البحث
-========================================== */
-
-function filterProducts() {
-
-    const search =
-        document
-        .getElementById("search-input")
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    const category =
-        document
-        .getElementById("category-filter")
-        .value;
-
-
-    const filtered =
-        products.filter(p => {
-
-            const matchSearch =
-                p.name
-                .toLowerCase()
-                .includes(search);
-
-
-            const matchCategory =
-                category === "all"
-                || p.category === category;
-
-
-            return matchSearch && matchCategory;
-
-        });
-
-
-    renderProducts(filtered);
-
-}
-
-
-/* ==========================================
-   السلة
-========================================== */
-
-function addToCart(index) {
-
-    const product =
-        products[index];
-
-
-    const existing =
-        cart.find(item =>
-            item.name === product.name
-        );
-
-
-    if (existing) {
-
-        existing.quantity++;
-
-    } else {
-
-        cart.push({
-            name: product.name,
-            price: Number(product.price),
-            image: product.image,
-            quantity: 1
-        });
-
-    }
-
-
-    saveCart();
-
-    openCart();
-
-}
-
-
-function changeQuantity(index, amount) {
-
-    cart[index].quantity += amount;
-
-
-    if (cart[index].quantity <= 0) {
-
-        cart.splice(index, 1);
-
-    }
-
-
-    saveCart();
-
-}
-
-
-function saveCart() {
-
-    localStorage.setItem(
-        "almabbeh_cart",
-        JSON.stringify(cart)
-    );
-
-    renderCart();
-
-}
-
-
-/* ==========================================
-   عرض السلة
-========================================== */
-
-function renderCart() {
-
-    const container =
-        document.getElementById("cart-items");
-
-    const totalElement =
-        document.getElementById("cart-total");
-
-    const countElement =
-        document.getElementById("cart-count");
-
-
-    if (!cart.length) {
-
-        container.innerHTML = `
-            <div class="text-center py-20 text-gray-400">
-
-                <div class="text-6xl mb-4">
-                    🛒
-                </div>
-
-                <p class="font-bold">
-                    السلة فارغة
-                </p>
-
-                <p class="text-sm mt-1">
-                    أضف المنتجات التي تريدها
-                </p>
-
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h3 class="text-2xl font-black text-gray-900">📦 قائمة المنتجات المتاحة</h3>
+                <p id="products-count" class="text-gray-500 text-sm mt-1">جاري تحميل المنتجات...</p>
             </div>
-        `;
+        </div>
 
-    } else {
+        <!-- شبكة المنتجات -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </main>
 
-        container.innerHTML =
-            cart.map((item, index) => {
+    <!-- لوحة سلة المشتريات الجانبية -->
+    <div id="cart-overlay" onclick="closeCart()" class="hidden fixed inset-0 overlay z-50"></div>
+    <aside id="cart-panel" class="fixed top-0 left-0 h-full w-full sm:w-[450px] bg-white z-[60] shadow-2xl -translate-x-full cart-panel flex flex-col">
+        <div class="bg-emerald-800 text-white p-6 flex justify-between items-center">
+            <div>
+                <h3 class="text-xl font-black">🛒 سلة مشتريات المتجر</h3>
+                <p class="text-emerald-200 text-xs mt-0.5">راجع المنتجات قبل تأكيد الإرسال</p>
+            </div>
+            <button onclick="closeCart()" class="text-2xl font-bold hover:text-emerald-200 transition">✕</button>
+        </div>
 
-                const image =
-                    item.image ||
-                    placeholderImage(item.name);
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
 
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between items-center text-lg font-black mb-6">
+                <span class="text-gray-600">الإجمالي الكلي:</span>
+                <span id="cart-total" class="text-emerald-700 text-2xl">0 جنيه</span>
+            </div>
+            <button onclick="sendWhatsAppOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl font-extrabold shadow-lg shadow-green-600/30 transition mb-3 flex items-center justify-center gap-2">
+                <span>📱 إرسال الطلب عبر واتساب</span>
+            </button>
+            <button onclick="clearCart()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 py-3 rounded-2xl font-bold transition text-sm">🗑️ تفريغ السلة بالكامل</button>
+        </div>
+    </aside>
 
+    <!-- التذييل الفاخر -->
+    <footer class="bg-gray-900 text-white mt-auto border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-lg font-black text-emerald-400 mb-2">عطارة المحبة والإيمان</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">نظام تجزئة متكامل ومطور لإدارة المنتجات، العطارة، والمواد الغذائية بكفاءة وفخامة مطلقة.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-3 text-white">أقسام المتجر الأساسية</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">عطارة وبهارات • حبوب وبقوليات • زيوت وسمن • أرز ومكرونة</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-3 text-white">الدعم والتواصل الفوري</h4>
+                <p class="text-gray-400 text-sm mb-1">📱 هاتف / واتساب: 01140950468</p>
+                <p class="text-gray-400 text-sm">📍 مصر</p>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 py-6 text-center text-gray-500 text-xs">
+            جميع الحقوق محفوظة لمتجر عطارة المحبة والإيمان &copy; 2026
+        </div>
+    </footer>
+
+    <!-- البرمجة ومنطق التشغيل -->
+    <script>
+        const WHATSAPP_NUMBER = "201140950468";
+        let isAdmin = false;
+        let cart = JSON.parse(localStorage.getItem("almabbeh_pro_cart")) || [];
+
+        let products = JSON.parse(localStorage.getItem("almabbeh_pro_products")) || [
+            { name: "كمون حصى فاخر", price: 65, category: "عطارة وبهارات", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80" },
+            { name: "أرز مصري ممتاز 1 كجم", price: 28, category: "أرز ومكرونة", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80" },
+            { name: "سمن بلدي صافي 1 كجم", price: 220, category: "زيوت وسمن", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=600&q=80" },
+            { name: "عدس استنبولي أصفر", price: 55, category: "حبوب وبقوليات", image: "https://images.unsplash.com/photo-1515942400420-22c2351c4a0d?auto=format&fit=crop&w=600&q=80" }
+        ];
+
+        function placeholderImage(name) {
+            return "https://via.placeholder.com/600x500/e8f5ef/065f46?text=" + encodeURIComponent(name);
+        }
+
+        function renderProducts(list = products) {
+            const grid = document.getElementById("products-grid");
+            const count = document.getElementById("products-count");
+            count.innerText = `${list.length} منتج متوفر في النظام`;
+
+            if (!list.length) {
+                grid.innerHTML = `<div class="col-span-full text-center py-20 text-gray-400"><div class="text-6xl mb-3">🔍</div><p class="font-bold text-lg">عذراً، لم نجد نتائج مطابقة لبحثك</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map((p) => {
+                const realIndex = products.indexOf(p);
+                const image = p.image || placeholderImage(p.name);
                 return `
+                <div class="product-card bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-52 bg-gray-100 overflow-hidden">
+                            <img src="${image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" onerror="this.src='${placeholderImage(p.name)}'">
+                            <span class="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-emerald-900 px-3.5 py-1.5 rounded-full text-xs font-black shadow-sm">${p.category}</span>
+                        </div>
+                        <div class="p-6">
+                            <h4 class="font-black text-lg text-gray-900 mb-2 leading-snug">${p.name}</h4>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0">
+                        <div class="flex items-center justify-between gap-2 mb-4">
+                            <span class="text-emerald-700 font-black text-2xl">${p.price} <small class="text-xs text-gray-500 font-normal">جنيه</small></span>
+                            <button onclick="addToCart(${realIndex})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-2xl text-sm font-black shadow-lg shadow-emerald-600/20 transition">🛒 أضف للسلة</button>
+                        </div>
+                        ${isAdmin ? `
+                        <div class="flex gap-2 border-t border-gray-100 pt-3 mt-2">
+                            <button onclick="editProduct(${realIndex})" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 py-2 rounded-xl text-xs font-bold transition">✏️ تعديل</button>
+                            <button onclick="deleteProduct(${realIndex})" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-xl text-xs font-bold transition">🗑️ حذف</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>`;
+            }).join("");
+            updateCategories();
+        }
 
-                <div class="border rounded-2xl p-3 mb-3">
+        function updateCategories() {
+            const select = document.getElementById("category-filter");
+            const currentVal = select.value;
+            const categories = [...new Set(products.map(p => p.category))];
+            select.innerHTML = `<option value="all">جميع الأقسام والمجموعات</option>`;
+            categories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}" ${currentVal === cat ? 'selected' : ''}>${cat}</option>`;
+            });
+        }
 
-                    <div class="flex gap-3">
+        function filterProducts() {
+            const search = document.getElementById("search-input").value.trim().toLowerCase();
+            const category = document.getElementById("category-filter").value;
+            const filtered = products.filter(p => {
+                const matchSearch = p.name.toLowerCase().includes(search);
+                const matchCategory = category === "all" || p.category === category;
+                return matchSearch && matchCategory;
+            });
+            renderProducts(filtered);
+        }
 
-                        <img
-                            src="${image}"
-                            class="w-20 h-20 rounded-xl object-cover">
+        function enableAdminMode() {
+            const pass = prompt("أدخل كلمة مرور المدير للتفعيل:");
+            if (pass === "123") {
+                isAdmin = true;
+                document.getElementById("admin-panel").classList.remove("hidden");
+                document.getElementById("admin-indicator").classList.remove("hidden");
+                renderProducts();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                alert("مرحباً بك يا مدير النظام! تم تفعيل لوحة التحكم.");
+            } else if (pass !== null) {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
 
-                        <div class="flex-1">
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById("admin-panel").classList.add("hidden");
+            document.getElementById("admin-indicator").classList.add("hidden");
+            renderProducts();
+        }
 
-                            <h4 class="font-black text-sm">
-                                ${item.name}
-                            </h4>
+        function saveProduct(event) {
+            event.preventDefault();
+            const index = document.getElementById("product-index").value;
+            const name = document.getElementById("p-name").value;
+            const price = document.getElementById("p-price").value;
+            const category = document.getElementById("p-category").value;
+            const imageFile = document.getElementById("p-image-file").files[0];
 
-                            <p class="text-emerald-700 font-
+            const finish = (imageUrl) => {
+                const data = {
+                    name,
+                    price: Number(price),
+                    category,
+                    image: imageUrl || (index !== "" ? products[index].image : "")
+                };
+
+                if (index === "") {
+                    products.push(data);
+                } else {
+                    products[index] = data;
+                }
+
+                localStorage.setItem("almabbeh_pro_products", JSON.stringify(products));
+                resetForm();
+                renderProducts();
+                alert("تم الحفظ وتحديث المخزون بنجاح!");
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = e => finish(e.target.result);
+                reader.readAsDataURL(imageFile);
+            } else {
+                finish(index !== "" ? products[index].image : "");
+            }
+        }
+
+        function editProduct(index) {
+            const p = products[index];
+            document.getElementById("product-index").value = index;
+            document.getElementById("p-name").value = p.name;
+            document.getElementById("p-price").value = p.price;
+            document.getElementById("p-category").value = p.category;
+            document.getElementById("form-title").innerText = "✏️ تعديل بيانات: " + p.name;
+            document.getElementById("admin-panel").classList.remove("hidden");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteProduct(index) {
+            if (confirm("هل أنت متأكد من حذف هذا المنتج نهائياً من النظام؟")) {
+                products.splice(index, 1);
+                localStorage.setItem("almabbeh_pro_products", JSON.stringify(products));
+                renderProducts();
+            }
+        }
+
+        function resetForm() {
+            doc
