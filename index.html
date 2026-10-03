@@ -1,442 +1,84 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر المبه - ALMABBEH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
-        .glass-header { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>عطارة المحبة والإيمان</title>
+<style>
+:root{--g:#1f6b3a;--gd:#14482a;--gold:#e0a82e;--bg:#f6f8f5;--tx:#17301f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,Arial,sans-serif;padding-bottom:100px}
+header{background:linear-gradient(160deg,var(--gd),var(--g));color:#fff;padding:20px 16px 56px;text-align:center}
+h1{margin:0;font-size:24px}header p{margin:4px 0 0;opacity:.85;font-size:14px}
+.sb{position:sticky;top:0;z-index:6;padding:0 14px 8px;margin-top:-30px}
+.sb input{width:100%;border:0;border-radius:26px;padding:14px 20px;font:inherit;font-size:16px;background:#fff;box-shadow:0 3px 12px rgba(20,72,42,.18)}
+section{margin:14px;background:#fff;border-radius:22px;padding:14px}
+h2{margin:0 0 10px;font-size:18px}
+.cats,.offs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.cat{flex:0 0 auto;border:0;background:#eef3ec;border-radius:24px;padding:9px 16px;font:inherit;cursor:pointer;color:var(--tx)}.cat.on{background:var(--g);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.offs .p{flex:0 0 160px}
+.p{position:relative;background:#fff;border-radius:18px;padding:9px;box-shadow:0 2px 9px rgba(20,72,42,.12);display:flex;flex-direction:column}
+.pic{position:relative;height:115px;border-radius:12px;background:#eef3ec;display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:contain;background:#fff}
+.p h3{font-size:14px;margin:8px 0 4px}
+.units{display:flex;gap:4px;flex-wrap:wrap;margin:2px 0}
+.u{border:1px solid #cfd9cc;background:#fff;border-radius:12px;padding:3px 8px;font:inherit;font-size:12px;cursor:pointer;color:var(--tx)}.u.on{background:var(--g);color:#fff;border-color:var(--g)}
+.qty{font-size:12px;color:var(--g);min-height:16px}
+.price{font-weight:bold;font-size:16px;margin-top:auto;padding-top:4px}.price s{color:#9aa39c;font-size:12px;font-weight:normal}
+.add{position:absolute;left:9px;top:82px;width:38px;height:38px;border-radius:50%;border:0;background:var(--gd);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.tag{position:absolute;top:6px;right:6px;background:#c0392b;color:#fff;font-size:12px;font-weight:bold;padding:2px 9px;border-radius:10px}
+.off{position:absolute;top:6px;left:6px;background:var(--gold);color:#3a2a00;font-size:12px;font-weight:bold;padding:2px 8px;border-radius:10px}
+.p.out .pic img,.p.out .pic{opacity:.5}
+.adm{display:flex;gap:4px;margin-top:6px}.adm button{flex:1;border:0;border-radius:10px;padding:7px 0;font:inherit;font-size:12px;cursor:pointer;background:#eef3ec}
+.empty{grid-column:1/-1;text-align:center;padding:24px;color:#7a857c}
+.bar{position:fixed;left:12px;right:12px;bottom:12px;background:#25D366;color:#fff;border:0;border-radius:30px;padding:16px;font:inherit;font-size:17px;font-weight:bold;display:none;justify-content:space-between;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;z-index:5}.bar.show{display:flex}
+.fab{position:fixed;left:14px;bottom:80px;width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:4}
+.newp{position:fixed;right:14px;bottom:80px;background:var(--gold);color:#3a2a00;border:0;border-radius:26px;padding:13px 18px;font:inherit;font-weight:bold;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:4;display:none;cursor:pointer}
+footer{text-align:center;padding:10px}footer button{border:0;background:none;color:#8a948c;font:inherit;font-size:13px;cursor:pointer}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;z-index:20}.sheet.show{display:flex}
+.box{background:#fff;width:100%;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px}
+.box input,.box select,.box textarea{width:100%;margin:5px 0;border:1px solid #cfd9cc;border-radius:12px;padding:12px;font:inherit;font-size:16px}
+.box label{font-size:13px;color:#566}
+.box .chk{display:flex;align-items:center;gap:8px;margin:8px 0}.box .chk input{width:auto}
+.ln{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #eef3ec;font-size:15px}
+.ln .q{display:flex;align-items:center;gap:8px}.ln .q button{width:30px;height:30px;border-radius:50%;border:0;background:#eef3ec;font-size:18px;cursor:pointer}
+.sm{padding:10px 0;font-size:15px;line-height:1.9}.sm b{font-size:18px}
+.send{width:100%;margin-top:8px;border:0;border-radius:26px;padding:15px;background:#25D366;color:#fff;font:inherit;font-size:17px;font-weight:bold;cursor:pointer}
+.send.dk{background:var(--g)}
+.close{width:100%;margin-top:6px;border:0;background:none;padding:10px;font:inherit;color:var(--g);cursor:pointer}
+</style>
 </head>
-<body class="text-gray-800">
-    <!-- الهيدر الفاخر -->
-    <header class="glass-header text-white shadow-xl py-6 px-6 mb-10">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <!-- اضغط مرتين هنا كمدير لتفعيل لوحة التحكم الخاصة بك -->
-                <h1 id="main-title" ondblclick="enableAdminMode()" class="text-3xl font-extrabold tracking-tight cursor-pointer select-none drop-shadow-md" title="اضغط مرتين للدخول كمدير">
-                    🛒 متجر المبه <span class="text-emerald-300 font-light text-xl">ALMABBEH</span>
-                </h1>
-                <p class="text-emerald-100 text-sm mt-1">تسوق أطيب المنتجات بأفضل الأسعار</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <span id="admin-badge" class="hidden bg-amber-400 text-amber-950 text-xs px-3 py-1.5 rounded-full font-bold shadow-sm">⭐ وضع المدير (نشط)</span>
-            </div>
-        </div>
-    </header>
+<body>
+<header><h1>عطارة المحبة والإيمان</h1><p>أهلاً بكم في متجرنا</p></header>
+<div class="sb"><input id="qs" type="search" placeholder="🔍 دوّر على منتج..." oninput="q=this.value.trim();draw()"></div>
+<section id="offsec" style="display:none"><h2>🔥 العروض</h2><div class="offs" id="offs"></div></section>
+<section><h2>الأقسام</h2><div class="cats" id="cats"></div></section>
+<section><h2 id="title">كل المنتجات</h2><div class="grid" id="grid"><div class="empty">جاري التحميل...</div></div></section>
+<footer><button id="lbtn" onclick="adminBtn()">🔒 دخول المدير</button></footer>
+<a class="fab" href="https://wa.me/201140950468" target="_blank" aria-label="واتساب">💬</a>
+<button class="newp" id="newp" onclick="openForm()">➕ منتج جديد</button>
+<button class="bar" id="bar" onclick="openCart()"><span id="count"></span><span>إرسال الطلب على واتساب</span></button>
 
-    <main class="container mx-auto px-4 pb-16">
-        
-        <!-- لوحة تحكم المدير الفاخرة (تظهر فقط لك بكلمة مرور) -->
-        <div id="admin-panel" class="hidden bg-white p-8 rounded-3xl shadow-2xl mb-12 border-2 border-emerald-500/20 transform transition-all">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <div>
-                    <h3 id="form-title" class="text-2xl font-extrabold text-emerald-800">➕ إضافة منتج جديد</h3>
-                    <p class="text-gray-500 text-xs mt-0.5">تحكم كامل في منتجات متجرك وصورها</p>
-                </div>
-                <button onclick="logoutAdmin()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">🔒 قفل لوحة التحكم</button>
-            </div>
-            
-            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <input type="hidden" id="product-index" value="">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">اسم المنتج</label>
-                    <input type="text" id="p-name" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition" placeholder="مثال: أرز مصري فاخر">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">السعر (بالجنيه)</label>
-                    <input type="number" id="p-price" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition" placeholder="مثال: 25">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">القسم</label>
-                    <input type="text" id="p-category" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition" placeholder="مثال: حبوب وعطارة">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">صورة المنتج (من جهازك)</label>
-                    <input type="file" id="p-image-file" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition">
-                </div>
-                <div class="sm:col-span-full flex gap-4 mt-4">
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-emerald-600/30 transition">حفظ المنتج واعتماده</button>
-                    <button type="button" onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-bold transition">إلغاء</button>
-                </div>
-            </form>
-        </div>
+<div class="sheet" id="cartsheet"><div class="box"><h2>طلبك</h2><div id="cl"></div><div class="sm" id="sm"></div>
+<input id="nm" placeholder="الاسم"><input id="ph" type="tel" placeholder="رقم موبايلك"><input id="ad" placeholder="العنوان بالتفصيل"><input id="nt" placeholder="ملاحظات (اختياري)">
+<button class="send" onclick="send()">إرسال الطلب على واتساب</button><button class="close" onclick="hide('cartsheet')">رجوع للمنتجات</button></div></div>
 
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-extrabold text-gray-800 border-r-4 border-emerald-600 pr-3">قائمة المنتجات المتاحة</h2>
-            <span class="text-gray-500 text-sm" id="products-count">جاري التحميل...</span>
-        </div>
-        
-        <!-- شبكة عرض المنتجات الفاخرة للعملاء -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
-    </main>
+<div class="sheet" id="loginsheet"><div class="box"><h2>دخول المدير</h2>
+<input id="le" type="email" placeholder="الإيميل" autocomplete="username"><input id="lp" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+<button class="send dk" onclick="login()">دخول</button><button class="close" onclick="hide('loginsheet')">إلغاء</button></div></div>
 
-    <footer class="bg-white border-t py-6 text-center text-gray-500 text-sm">
-        جميع الحقوق محفوظة لمتجر المبه &copy; 2026
-    </footer>
+<div class="sheet" id="formsheet"><div class="box"><h2 id="ft">➕ منتج جديد</h2>
+<input type="hidden" id="fid">
+<label>اسم المنتج</label><input id="fn" placeholder="مثال: سكر 1 كيلو">
+<label>القسم</label><input id="fc" list="catlist" placeholder="مثال: الأساسيات"><datalist id="catlist"></datalist>
+<label>السعر (ج.م)</label><input id="fp" type="number" inputmode="decimal" placeholder="مثال: 35">
+<label>السعر قبل الخصم (اختياري، للعروض)</label><input id="fo" type="number" inputmode="decimal">
+<label>وحدات وأسعار (اختياري)، مثال: كيلو=24, شيكارة=215</label><input id="fu" placeholder="لو كتبتها السعر الأول هو سعر المنتج">
+<label>صورة المنتج (من الموبايل)</label><input id="ff" type="file" accept="image/*">
+<label class="chk"><input type="checkbox" id="fs"> المنتج خلصان</label>
+<button class="send dk" id="fsave" onclick="save()">حفظ المنتج</button><button class="close" onclick="hide('formsheet')">إلغاء</button></div></div>
 
-    <script>
-        let isAdmin = false;
-
-        // المنتجات الافتراضية
-        let products = JSON.parse(localStorage.getItem('almabbeh_products')) || [
-            { name: "أرز", price: 25, category: "حبوب", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=500&q=80" },
-            { name: "زيت حلو 1 بروف", price: 45, category: "زيوت", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" },
-            { name: "مكرونة", price: 15, category: "نشويات", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80" },
-            { name: "شاي العروسة 250 جم", price: 35, category: "مشروبات", image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=500&q=80" },
-            { name: "سمن جنة 1.5 كج", price: 95, category: "دهون ولبنيات", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80" }
-        ];
-
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            document.getElementById('products-count').innerText = `${products.length} منتج متوفر`;
-
-            if (products.length === 0) {
-                grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-16 text-lg">لا توجد منتجات مضافة حالياً.</p>';
-                return;
-            }
-
-            grid.innerHTML = products.map((p, index) => `
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col justify-between group">
-                    <div>
-                        <div class="w-full h-52 bg-gray-100 overflow-hidden relative">
-                            <img src="${p.image}" alt="${p.name}" class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500">
-                            <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-emerald-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm">${p.category}</span>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">${p.name}</h3>
-                        </div>
-                    </div>
-                    <div class="p-5 pt-0">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-emerald-700 font-extrabold text-2xl">${p.price} <span class="text-sm font-normal text-gray-500">جنيه</span></span>
-                            <button onclick="alert('تمت إضافة ${p.name} إلى السلة بنجاح!')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-emerald-600/20 transition">أضف للسلة</button>
-                        </div>
-                        
-                        <!-- أزرار المدير السرية (تظهر فقط لك عندما تفعل وضع المدير) -->
-                        ${isAdmin ? `
-                            <div class="flex gap-2 border-t pt-3 mt-2">
-                                <button onclick="editProduct(${index})" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 py-2 rounded-xl text-xs font-bold transition">✏️ تعديل</button>
-                                <button onclick="deleteProduct(${index})" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-xl text-xs font-bold transition">🗑️ حذف</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // تفعيل وضع المدير بالضغط مرتين على العنوان
-        function enableAdminMode() {
-            const pass = prompt("أدخل كلمة مرور المدير الخاصة بك:");
-            if (pass === "123") { // كلمة السر الافتراضية
-                isAdmin = true;
-                document.getElementById('admin-badge').classList.remove('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                renderProducts();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                alert("أهلاً بك يا مدير! تم تفعيل لوحة التحكم.");
-            } else if (pass !== null) {
-                alert("كلمة المرور غير صحيحة!");
-            }
-        }
-
-        function logoutAdmin() {
-            isAdmin = false;
-            document.getElementById('admin-panel').classList.add('hidden');
-            document.getElementById('admin-badge').classList.add('hidden');
-            renderProducts();
-        }
-
-        function saveProduct(e) {
-            e.preventDefault();
-            const index = document.getElementById('product-index').value;
-            const name = document.getElementById('p-name').value;
-            const price = document.getElementById('p-price').value;
-            const category = document.getElementById('p-category').value;
-            const imageFile = document.getElementById('p-image-file').files[0];
-
-            const finishSaving = (imageUrl) => {
-                const productData = { 
-                    name, 
-                    price: Number(price), 
-                    category, 
-                    image: imageUrl || (index !== "" ? products[index].image : "https://via.placeholder.com/500") 
-                };
-
-                if (index === "") {
-                    products.push(productData);
-                } else {
-                    products[index] = productData;
-                }
-
-                localStorage.setItem('almabbeh_products', JSON.stringify(products));
-                resetForm();
-                renderProducts();
-            };
-
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(uploadEvent) {
-                    finishSaving(uploadEvent.target.result);
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                finishSaving(index !== "" ? products[index].image : null);
-            }
-        }
-
-        function editProduct(index) {
-            const p = products[index];
-            document.getElementById('product-index').value = index;
-            document.getElementById('p-name').value = p.name;
-            document.getElementById('p-price').value = p.price;
-            document.getElementById('p-category').value = p.category;
-            document.getElementById('form-title').innerText = "✏️ تعديل المنتج: " + p.name;
-            
-            document.getElementById('admin-panel').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteProduct(index) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج نهائياً؟')) {
-                products.splice(index, 1);
-                localStorage.setItem('almabbeh_products', JSON.stringify(products));
-                renderProducts();
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('product-form').reset();
-            document.getElementById('product-index').value = "";
-            document.getElementById('form-title').innerText = "➕ إضافة منتج جديد";
-            document.getElementById('admin-panel').classList.add('hidden');
-        }
-
-        renderProducts();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر المبه - ALMABBEH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
-        .glass-header { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
-    </style>
-</head>
-<body class="text-gray-800">
-    <!-- الهيدر الفاخر -->
-    <header class="glass-header text-white shadow-xl py-6 px-6 mb-10">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <!-- اضغط مرتين هنا كمدير لتفعيل لوحة التحكم الخاصة بك -->
-                <h1 id="main-title" ondblclick="enableAdminMode()" class="text-3xl font-extrabold tracking-tight cursor-pointer select-none drop-shadow-md" title="اضغط مرتين للدخول كمدير">
-                    🛒 متجر المبه <span class="text-emerald-300 font-light text-xl">ALMABBEH</span>
-                </h1>
-                <p class="text-emerald-100 text-sm mt-1">تسوق أطيب المنتجات بأفضل الأسعار</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <span id="admin-badge" class="hidden bg-amber-400 text-amber-950 text-xs px-3 py-1.5 rounded-full font-bold shadow-sm">⭐ وضع المدير (نشط)</span>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 pb-16">
-        
-        <!-- لوحة تحكم المدير الفاخرة (تظهر فقط لك بكلمة مرور) -->
-        <div id="admin-panel" class="hidden bg-white p-8 rounded-3xl shadow-2xl mb-12 border-2 border-emerald-500/20 transform transition-all">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <div>
-                    <h3 id="form-title" class="text-2xl font-extrabold text-emerald-800">➕ إضافة منتج جديد</h3>
-                    <p class="text-gray-500 text-xs mt-0.5">تحكم كامل في منتجات متجرك وصورها</p>
-                </div>
-                <button onclick="logoutAdmin()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm">🔒 قفل لوحة التحكم</button>
-            </div>
-            
-            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <input type="hidden" id="product-index" value="">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">اسم المنتج</label>
-                    <input type="text" id="p-name" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition" placeholder="مثال: أرز مصري فاخر">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">السعر (بالجنيه)</label>
-                    <input type="number" id="p-price" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition" placeholder="مثال: 25">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">القسم</label>
-                    <input type="text" id="p-category" required class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition" placeholder="مثال: حبوب وعطارة">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">صورة المنتج (من جهازك)</label>
-                    <input type="file" id="p-image-file" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition">
-                </div>
-                <div class="sm:col-span-full flex gap-4 mt-4">
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-emerald-600/30 transition">حفظ المنتج واعتماده</button>
-                    <button type="button" onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-bold transition">إلغاء</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-extrabold text-gray-800 border-r-4 border-emerald-600 pr-3">قائمة المنتجات المتاحة</h2>
-            <span class="text-gray-500 text-sm" id="products-count">جاري التحميل...</span>
-        </div>
-        
-        <!-- شبكة عرض المنتجات الفاخرة للعملاء -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
-    </main>
-
-    <footer class="bg-white border-t py-6 text-center text-gray-500 text-sm">
-        جميع الحقوق محفوظة لمتجر المبه &copy; 2026
-    </footer>
-
-    <script>
-        let isAdmin = false;
-
-        // المنتجات الافتراضية
-        let products = JSON.parse(localStorage.getItem('almabbeh_products')) || [
-            { name: "أرز", price: 25, category: "حبوب", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=500&q=80" },
-            { name: "زيت حلو 1 بروف", price: 45, category: "زيوت", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" },
-            { name: "مكرونة", price: 15, category: "نشويات", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=80" },
-            { name: "شاي العروسة 250 جم", price: 35, category: "مشروبات", image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=500&q=80" },
-            { name: "سمن جنة 1.5 كج", price: 95, category: "دهون ولبنيات", image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80" }
-        ];
-
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            document.getElementById('products-count').innerText = `${products.length} منتج متوفر`;
-
-            if (products.length === 0) {
-                grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-16 text-lg">لا توجد منتجات مضافة حالياً.</p>';
-                return;
-            }
-
-            grid.innerHTML = products.map((p, index) => `
-                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col justify-between group">
-                    <div>
-                        <div class="w-full h-52 bg-gray-100 overflow-hidden relative">
-                            <img src="${p.image}" alt="${p.name}" class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500">
-                            <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-emerald-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm">${p.category}</span>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">${p.name}</h3>
-                        </div>
-                    </div>
-                    <div class="p-5 pt-0">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-emerald-700 font-extrabold text-2xl">${p.price} <span class="text-sm font-normal text-gray-500">جنيه</span></span>
-                            <button onclick="alert('تمت إضافة ${p.name} إلى السلة بنجاح!')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-emerald-600/20 transition">أضف للسلة</button>
-                        </div>
-                        
-                        <!-- أزرار المدير السرية (تظهر فقط لك عندما تفعل وضع المدير) -->
-                        ${isAdmin ? `
-                            <div class="flex gap-2 border-t pt-3 mt-2">
-                                <button onclick="editProduct(${index})" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 py-2 rounded-xl text-xs font-bold transition">✏️ تعديل</button>
-                                <button onclick="deleteProduct(${index})" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-xl text-xs font-bold transition">🗑️ حذف</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // تفعيل وضع المدير بالضغط مرتين على العنوان
-        function enableAdminMode() {
-            const pass = prompt("أدخل كلمة مرور المدير الخاصة بك:");
-            if (pass === "123") { // كلمة السر الافتراضية
-                isAdmin = true;
-                document.getElementById('admin-badge').classList.remove('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                renderProducts();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                alert("أهلاً بك يا مدير! تم تفعيل لوحة التحكم.");
-            } else if (pass !== null) {
-                alert("كلمة المرور غير صحيحة!");
-            }
-        }
-
-        function logoutAdmin() {
-            isAdmin = false;
-            document.getElementById('admin-panel').classList.add('hidden');
-            document.getElementById('admin-badge').classList.add('hidden');
-            renderProducts();
-        }
-
-        function saveProduct(e) {
-            e.preventDefault();
-            const index = document.getElementById('product-index').value;
-            const name = document.getElementById('p-name').value;
-            const price = document.getElementById('p-price').value;
-            const category = document.getElementById('p-category').value;
-            const imageFile = document.getElementById('p-image-file').files[0];
-
-            const finishSaving = (imageUrl) => {
-                const productData = { 
-                    name, 
-                    price: Number(price), 
-                    category, 
-                    image: imageUrl || (index !== "" ? products[index].image : "https://via.placeholder.com/500") 
-                };
-
-                if (index === "") {
-                    products.push(productData);
-                } else {
-                    products[index] = productData;
-                }
-
-                localStorage.setItem('almabbeh_products', JSON.stringify(products));
-                resetForm();
-                renderProducts();
-            };
-
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(uploadEvent) {
-                    finishSaving(uploadEvent.target.result);
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                finishSaving(index !== "" ? products[index].image : null);
-            }
-        }
-
-        function editProduct(index) {
-            const p = products[index];
-            document.getElementById('product-index').value = index;
-            document.getElementById('p-name').value = p.name;
-            document.getElementById('p-price').value = p.price;
-            document.getElementById('p-category').value = p.category;
-            document.getElementById('form-title').innerText = "✏️ تعديل المنتج: " + p.name;
-            
-            document.getElementById('admin-panel').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteProduct(index) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج نهائياً؟')) {
-                products.splice(index, 1);
-                localStorage.setItem('almabbeh_products', JSON.stringify(products));
-                renderProducts();
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('product-form').reset();
-            document.getElementById('product-index').value = "";
-            document.getElementById('form-title').innerText = "➕ إضافة منتج جديد";
-            document.getElementById('admin-panel').classList.add('hidden');
-        }
-
-        renderProducts();
-    </script>
-</body>
-</html>
+<script>
+var SB="https://altqqwqhtjfrsfdmszbr.supabase.co",KEY="PASTE_KEY_HERE",PHONE="201140950468",DELIVERY=20,FREE_OVER=500,GC="almabbeh";
+var IMGS={"قهوة كوفي بريك 2×1": "data:image/jpeg;base64,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
