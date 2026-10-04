@@ -32,13 +32,13 @@
         </div>
     </header>
 
-    <!-- لوحة التحكم -->
+    <!-- لوحة التحكم لإضافة المنتجات -->
     <div id="admin-panel" class="hidden max-w-7xl mx-auto px-4 mt-6 w-full">
         <div class="bg-white border-2 border-amber-400 rounded-2xl p-6 shadow-xl">
-            <h3 class="text-lg font-black text-emerald-900 mb-4">🔐 لوحة تحكم المدير (إضافة وتعديل المنتجات)</h3>
-            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <input type="text" id="p-name" placeholder="اسم المنتج" required class="bg-gray-50 border p-3 rounded-xl text-sm">
-                <input type="number" id="p-price" placeholder="السعر بالجنيه" required class="bg-gray-50 border p-3 rounded-xl text-sm">
+            <h3 class="text-lg font-black text-emerald-900 mb-4">🔐 لوحة تحكم المدير (إضافة المنتجات فوراً)</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <input type="text" id="p-name" placeholder="اسم المنتج (مثال: كمون فاخر)" required class="bg-gray-50 border p-3 rounded-xl text-sm">
+                <input type="number" id="p-price" placeholder="السعر بالجنيه (مثال: 50)" required class="bg-gray-50 border p-3 rounded-xl text-sm">
                 <select id="p-cat" class="bg-gray-50 border p-3 rounded-xl text-sm">
                     <option>عطارة وبهارات</option>
                     <option>زيوت وسمن</option>
@@ -46,10 +46,9 @@
                     <option>أرز ومكرونة</option>
                     <option>مشروبات</option>
                 </select>
-                <input type="file" id="p-img" accept="image/*" class="bg-gray-50 border p-2 rounded-xl text-xs">
                 <div class="sm:col-span-full flex gap-2 pt-2">
-                    <button type="submit" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow">حفظ وعرض المنتج فوراً</button>
-                    <button type="button" onclick="toggleAdminPanel()" class="bg-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold text-sm">إغلاق اللوحة</button>
+                    <button type="submit" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow hover:bg-emerald-700">➕ اضف المنتج للموقع فوراً</button>
+                    <button type="button" onclick="toggleAdminPanel()" class="bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold text-sm">إغلاق اللوحة</button>
                 </div>
             </form>
         </div>
@@ -85,13 +84,17 @@
 
     <script>
         let isAdmin = false;
-        let products = JSON.parse(localStorage.getItem("store_prods")) || [
+        
+        // المنتجات الافتراضية
+        let defaultProducts = [
             { name: "زيت حلوة 3 لتر", price: 175, cat: "زيوت وسمن", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" },
             { name: "كمون حصى فاخر", price: 65, cat: "عطارة وبهارات", img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
             { name: "أرز مصري 1كجم", price: 28, cat: "أرز ومكرونة", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
             { name: "سمن بلدي 1كجم", price: 220, cat: "زيوت وسمن", img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" }
         ];
-        let cart = JSON.parse(localStorage.getItem("store_cart")) || [];
+
+        let products = JSON.parse(localStorage.getItem("store_prods_v2")) || defaultProducts;
+        let cart = JSON.parse(localStorage.getItem("store_cart_v2")) || [];
 
         function toggleAdminPanel() {
             if (!isAdmin) {
@@ -123,7 +126,7 @@
             grid.innerHTML = filtered.map((p, idx) => `
                 <div class="bg-white rounded-2xl shadow-sm border p-4 flex flex-col justify-between">
                     <div>
-                        <img src="${p.img}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/300'">
+                        <img src="${p.img}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500'">
                         <span class="bg-emerald-50 text-emerald-800 text-xs px-2 py-1 rounded-md font-bold">${p.cat}</span>
                         <h4 class="font-black text-gray-900 mt-2">${p.name}</h4>
                     </div>
@@ -134,7 +137,7 @@
                         </div>
                         ${isAdmin ? `
                         <div class="flex gap-1 border-t pt-2">
-                            <button onclick="deleteProduct(${idx})" class="w-full bg-red-50 text-red-600 py-1 rounded-lg text-xs font-bold">🗑️ حذف</button>
+                            <button onclick="deleteProduct(${idx})" class="w-full bg-red-50 text-red-600 py-1 rounded-lg text-xs font-bold">🗑️ حذف المنتج</button>
                         </div>` : ''}
                     </div>
                 </div>
@@ -146,29 +149,25 @@
             let name = document.getElementById("p-name").value;
             let price = Number(document.getElementById("p-price").value);
             let cat = document.getElementById("p-cat").value;
-            let fileInput = document.getElementById("p-img").files[0];
 
-            let proceed = (imgUrl) => {
-                products.push({ name, price, cat, img: imgUrl || "https://via.placeholder.com/300" });
-                localStorage.setItem("store_prods", JSON.stringify(products));
-                document.getElementById("product-form").reset();
-                render();
-                alert("تم إضافة المنتج وعرضه فوراً بنجاح!");
-            };
-
-            if (fileInput) {
-                let reader = new FileReader();
-                reader.onload = function(evt) { proceed(evt.target.result); };
-                reader.readAsDataURL(fileInput);
-            } else {
-                proceed();
-            }
+            // إضافة المنتج فوراً للذاكرة وتحديث الشاشة بدون أخطاء صور
+            products.push({ 
+                name: name, 
+                price: price, 
+                cat: cat, 
+                img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500" 
+            });
+            
+            localStorage.setItem("store_prods_v2", JSON.stringify(products));
+            document.getElementById("product-form").reset();
+            render();
+            alert("✅ تمت إنجاز الإضافة وظهور المنتج في الموقع بنجاح!");
         }
 
         function deleteProduct(idx) {
-            if (confirm("هل تريد حذف هذا المنتج؟")) {
+            if (confirm("هل تريد حذف هذا المنتج نهائياً؟")) {
                 products.splice(idx, 1);
-                localStorage.setItem("store_prods", JSON.stringify(products));
+                localStorage.setItem("store_prods_v2", JSON.stringify(products));
                 render();
             }
         }
@@ -189,7 +188,7 @@
         }
 
         function saveCart() {
-            localStorage.setItem("store_cart", JSON.stringify(cart));
+            localStorage.setItem("store_cart_v2", JSON.stringify(cart));
             renderCart();
         }
 
@@ -229,6 +228,7 @@
 
         function openCart() {
             document.getElementById("cart-drawer").classList.remove("-translate-x-full");
+            document.getElementById("cart5-overlay")?.classList.remove("hidden");
             document.getElementById("cart-overlay").classList.remove("hidden");
             renderCart();
         }
