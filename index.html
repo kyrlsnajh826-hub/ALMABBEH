@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,6 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <!-- زر المدير الواضح -->
                 <button onclick="toggleAdminPanel()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-4 py-2 rounded-xl text-sm font-black shadow transition">
                     ⚙️ إدارة المتجر
                 </button>
@@ -33,12 +32,11 @@
         </div>
     </header>
 
-    <!-- لوحة التحكم (مخفية افتراضياً) -->
+    <!-- لوحة التحكم -->
     <div id="admin-panel" class="hidden max-w-7xl mx-auto px-4 mt-6 w-full">
         <div class="bg-white border-2 border-amber-400 rounded-2xl p-6 shadow-xl">
             <h3 class="text-lg font-black text-emerald-900 mb-4">🔐 لوحة تحكم المدير (إضافة وتعديل المنتجات)</h3>
             <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <input type="hidden" id="edit-index" value="">
                 <input type="text" id="p-name" placeholder="اسم المنتج" required class="bg-gray-50 border p-3 rounded-xl text-sm">
                 <input type="number" id="p-price" placeholder="السعر بالجنيه" required class="bg-gray-50 border p-3 rounded-xl text-sm">
                 <select id="p-cat" class="bg-gray-50 border p-3 rounded-xl text-sm">
@@ -50,14 +48,14 @@
                 </select>
                 <input type="file" id="p-img" accept="image/*" class="bg-gray-50 border p-2 rounded-xl text-xs">
                 <div class="sm:col-span-full flex gap-2 pt-2">
-                    <button type="submit" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow">حفظ المنتج</button>
+                    <button type="submit" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow">حفظ وعرض المنتج فوراً</button>
                     <button type="button" onclick="toggleAdminPanel()" class="bg-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-bold text-sm">إغلاق اللوحة</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- محتوى الموقع الرئيسي -->
+    <!-- المحتوى الرئيسي -->
     <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
         <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 class="text-2xl font-black text-gray-800">قائمة المنتجات والعروض</h2>
@@ -67,7 +65,7 @@
         <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </main>
 
-    <!-- سلة المشتريات الجانبية -->
+    <!-- السلة الجانبية -->
     <div id="cart-overlay" onclick="closeCart()" class="hidden fixed inset-0 bg-black/50 z-50"></div>
     <div id="cart-drawer" class="fixed top-0 left-0 h-full w-80 bg-white z-50 shadow-2xl p-6 flex flex-col -translate-x-full transition-transform duration-300">
         <div class="flex justify-between items-center mb-4 border-b pb-3">
@@ -85,7 +83,6 @@
         </div>
     </div>
 
-    <!-- كود التشغيل -->
     <script>
         let isAdmin = false;
         let products = JSON.parse(localStorage.getItem("store_prods")) || [
@@ -156,7 +153,7 @@
                 localStorage.setItem("store_prods", JSON.stringify(products));
                 document.getElementById("product-form").reset();
                 render();
-                alert("تم إضافة المنتج بنجاح!");
+                alert("تم إضافة المنتج وعرضه فوراً بنجاح!");
             };
 
             if (fileInput) {
