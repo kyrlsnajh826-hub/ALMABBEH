@@ -19,10 +19,10 @@
 </head>
 <body class="text-gray-900 antialiased flex flex-col min-h-screen">
 
-    <!-- الهيدر العلوي (اضغط 3 ضغطات متتالية هنا لفتح لوحة المدير سرّياً) -->
-    <header class="hero-bg text-white sticky top-0 z-45 shadow-2xl border-b border-emerald-600/35">
+    <!-- الهيدر العلوي -->
+    <header class="hero-bg text-white sticky top-0 z-40 shadow-2xl border-b border-emerald-600/35">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div id="secret-admin-trigger" onclick="handleSecretClick()" class="cursor-pointer select-none group" title="متجر موثوق">
+            <div class="cursor-pointer select-none">
                 <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-wide flex items-center gap-2">
                     🌿 عطارة المحبة والإيمان
                 </h1>
@@ -30,7 +30,12 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <button onclick="openCart()" class="relative bg-white/15 hover:bg-white/25 border border-white/20 text-white px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2 transition backdrop-blur-md shadow-lg">
+                <!-- زر دخول المدير الواضح والمباشر -->
+                <button onclick="requestAdminAccess()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-3.5 py-2 rounded-xl text-xs font-black shadow transition flex items-center gap-1">
+                    ⚙️ <span id="admin-btn-text">دخول المدير</span>
+                </button>
+
+                <button onclick="openCart()" class="relative bg-white/15 hover:bg-white/25 border border-white/20 text-white px-4 sm:px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2 transition backdrop-blur-md shadow-lg">
                     <span>🛒 السلة</span>
                     <span id="cart-count" class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-black shadow">0</span>
                 </button>
@@ -38,7 +43,7 @@
         </div>
     </header>
 
-    <!-- بانر ترويجي جذاب للعميل -->
+    <!-- بانر ترويجي -->
     <section class="hero-bg text-white py-12 px-4 relative overflow-hidden">
         <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
@@ -62,15 +67,15 @@
         </div>
     </section>
 
-    <!-- لوحة تحكم المدير السرية (مخفية بالكامل عن العملاء) -->
+    <!-- لوحة تحكم المدير (تظهر فقط بعد إدخال الباسورد) -->
     <div id="admin-panel" class="hidden max-w-7xl mx-auto px-4 mt-8 w-full">
         <div class="bg-white rounded-3xl shadow-2xl border-2 border-amber-400 p-6 md:p-8">
             <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b border-gray-100">
                 <div>
-                    <h3 id="form-title" class="text-2xl font-black text-emerald-900">🔐 لوحة المدير السرية</h3>
-                    <p class="text-gray-500 text-sm">أنت الآن في وضع الإدارة الآمن والمحمي</p>
+                    <h3 id="form-title" class="text-2xl font-black text-emerald-900">🔐 لوحة المدير لإدارة المنتجات</h3>
+                    <p class="text-gray-500 text-sm">أنت الآن في وضع الإدارة الكاملة للمتجر</p>
                 </div>
-                <button onclick="logoutAdmin()" class="bg-red-50 hover:bg-red-100 text-red-600 px-5 py-2.5 rounded-xl font-bold transition text-sm">🔒 إغلاق لوحة التحكم</button>
+                <button onclick="logoutAdmin()" class="bg-red-50 hover:bg-red-100 text-red-600 px-5 py-2.5 rounded-xl font-bold transition text-sm">🔒 قفل لوحة التحكم</button>
             </div>
 
             <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -102,7 +107,7 @@
                 </div>
                 <div class="sm:col-span-full flex gap-4 pt-2">
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-2xl font-extrabold shadow-lg transition">حفظ المنتج واعتماده</button>
-                    <button type="button" onclick="resetForm()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3.5 rounded-2xl font-bold transition">إلغاء</button>
+                    <button type="button" onclick="resetForm()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3.5 rounded-2xl font-bold transition">إلغاء التعديل</button>
                 </div>
             </form>
         </div>
@@ -140,7 +145,7 @@
     <aside id="cart-panel" class="fixed top-0 left-0 h-full w-full sm:w-[450px] bg-white z-[60] shadow-2xl -translate-x-full cart-panel flex flex-col">
         <div class="bg-emerald-800 text-white p-6 flex justify-between items-center">
             <div>
-                <h3 class="text-xl font-black">🛒 سلة المشتريات</h3>
+                <h3 class="text-xl font-black">🛒 سلة Mشترياتك</h3>
                 <p class="text-emerald-200 text-xs mt-0.5">راجع طلباتك قبل الإرسال</p>
             </div>
             <button onclick="closeCart()" class="text-2xl font-bold hover:text-emerald-200 transition">✕</button>
@@ -182,14 +187,13 @@
         </div>
     </footer>
 
-    <!-- البرمجة والمنطق والأمان -->
+    <!-- البرمجة والمنطق -->
     <script>
         const WHATSAPP_NUMBER = "201140950468";
         let isAdmin = false;
-        let cart = JSON.parse(localStorage.getItem("almabbeh_v3_cart")) || [];
+        let cart = JSON.parse(localStorage.getItem("almabbeh_final_cart")) || [];
 
-        // المنتجات مع إضافة زيت حلوة 3 لتر 175 جنيه والأقسام الجديدة
-        let products = JSON.parse(localStorage.getItem("almabbeh_v3_products")) || [
+        let products = JSON.parse(localStorage.getItem("almabbeh_final_products")) || [
             { name: "زيت حلوة 3 لتر", price: 175, category: "زيوت وسمن", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80" },
             { name: "كمون حصى فاخر", price: 65, category: "عطارة وبهارات", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80" },
             { name: "أرز مصري ممتاز 1 كجم", price: 28, category: "أرز ومكرونة", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80" },
@@ -199,35 +203,31 @@
             { name: "مسحوق غسيل أتوماتيك 2.5كجم", price: 110, category: "مستلزمات منزلية وتنظيف", image: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=600&q=80" }
         ];
 
-        let clickCount = 0;
-        let clickTimer = null;
-
-        function handleSecretClick() {
-            clickCount++;
-            if (clickCount === 1) {
-                clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                }, 600);
-            } else if (clickCount === 3) {
-                clearTimeout(clickTimer);
-                clickCount = 0;
-                
-                if (!isAdmin) {
-                    const pass = prompt("أدخل الرقم السري لإدارة النظام:");
-                    if (pass === "Almabbeh@2026#Admin") {
-                        isAdmin = true;
-                        document.getElementById("admin-panel").classList.remove("hidden");
-                        renderProducts();
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        alert("مرحباً بك يا مدير النظام! تم فتح لوحة التحكم السرية بنجاح.");
-                    } else if (pass !== null) {
-                        alert("الرقم السري خاطئ!");
-                    }
-                } else {
-                    const panel = document.getElementById("admin-panel");
-                    panel.classList.toggle("hidden");
+        function requestAdminAccess() {
+            if (!isAdmin) {
+                const pass = prompt("أدخل الرقم السري لإدارة المتجر:");
+                if (pass === "Almabbeh@2026#Admin") {
+                    isAdmin = true;
+                    document.getElementById("admin-panel").classList.remove("hidden");
+                    document.getElementById("admin-btn-text").innerText = "لوحة المدير مفتوحة";
+                    renderProducts();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    alert("مرحباً بك يا مدير المتجر! تم فتح لوحة التحكم بنجاح.");
+                } else if (pass !== null) {
+                    alert("الرقم السري خطأ!");
                 }
+            } else {
+                const panel = document.getElementById("admin-panel");
+                panel.classList.toggle("hidden");
             }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById("admin-panel").classList.add("hidden");
+            document.getElementById("admin-btn-text").innerText = "دخول المدير";
+            renderProducts();
+            alert("تم إغلاق لوحة التحكم بأمان.");
         }
 
         function placeholderImage(name) {
@@ -296,13 +296,6 @@
             renderProducts(filtered);
         }
 
-        function logoutAdmin() {
-            isAdmin = false;
-            document.getElementById("admin-panel").classList.add("hidden");
-            renderProducts();
-            alert("تم إغلاق لوحة التحكم بنجاح وعاد الموقع لوضع العملاء.");
-        }
-
         function saveProduct(event) {
             event.preventDefault();
             const index = document.getElementById("product-index").value;
@@ -325,4 +318,8 @@
                     products[index] = data;
                 }
 
-                localStorage.setItem("a
+                localStorage.setItem("almabbeh_final_products", JSON.stringify(products));
+                resetForm();
+                renderProducts();
+                alert("تم حفظ
+                      
