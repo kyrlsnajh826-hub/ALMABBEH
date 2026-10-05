@@ -21,8 +21,8 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <button onclick="toggleAdminPanel()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-4 py-2 rounded-xl text-sm font-black shadow transition">
-                    ⚙️ إدارة المتجر
+                <button onclick="openAdminModal()" class="bg-amber-400 hover:bg-amber-500 text-amber-950 px-4 py-2 rounded-xl text-sm font-black shadow transition">
+                    ➕ إضافة منتج
                 </button>
                 
                 <button onclick="openCart()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1 shadow">
@@ -32,23 +32,32 @@
         </div>
     </header>
 
-    <!-- لوحة التحكم لإضافة المنتجات -->
-    <div id="admin-panel" class="hidden max-w-7xl mx-auto px-4 mt-6 w-full">
-        <div class="bg-white border-2 border-amber-400 rounded-2xl p-6 shadow-xl">
-            <h3 class="text-lg font-black text-emerald-900 mb-4">🔐 لوحة تحكم المدير (إضافة المنتجات فوراً)</h3>
-            <form id="product-form" onsubmit="saveProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <input type="text" id="p-name" placeholder="اسم المنتج (مثال: كمون فاخر)" required class="bg-gray-50 border p-3 rounded-xl text-sm">
-                <input type="number" id="p-price" placeholder="السعر بالجنيه (مثال: 50)" required class="bg-gray-50 border p-3 rounded-xl text-sm">
-                <select id="p-cat" class="bg-gray-50 border p-3 rounded-xl text-sm">
-                    <option>عطارة وبهارات</option>
-                    <option>زيوت وسمن</option>
-                    <option>حبوب وبقوليات</option>
-                    <option>أرز ومكرونة</option>
-                    <option>مشروبات</option>
-                </select>
-                <div class="sm:col-span-full flex gap-2 pt-2">
-                    <button type="submit" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow hover:bg-emerald-700">➕ اضف المنتج للموقع فوراً</button>
-                    <button type="button" onclick="toggleAdminPanel()" class="bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold text-sm">إغلاق اللوحة</button>
+    <!-- نافذة إضافة منتج (منبثقة بنفس الشكل المطلوب) -->
+    <div id="admin-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl relative border-2 border-amber-400">
+            <button onclick="closeAdminModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+            <h3 class="text-xl font-black text-emerald-900 mb-6 text-center">إضافة منتج</h3>
+            
+            <form onsubmit="saveNewProduct(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">اسم المنتج</label>
+                    <input type="text" id="p-name" placeholder="مكرونه" required class="w-full bg-gray-50 border p-3 rounded-2xl text-sm focus:outline-none focus:border-emerald-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">السعر</label>
+                    <input type="number" id="p-price" placeholder="80" required class="w-full bg-gray-50 border p-3 rounded-2xl text-sm focus:outline-none focus:border-emerald-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">صورة المنتج</label>
+                    <input type="file" id="p-img" accept="image/*" required class="w-full bg-gray-50 border p-2 rounded-2xl text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-900 hover:file:bg-amber-200">
+                    <p class="text-[10px] text-gray-400 mt-1">JPG أو PNG أو WebP حتى 10 ميجابايت.</p>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 rounded-2xl font-black text-sm shadow-lg">إضافة منتج</button>
+                    <button type="button" onclick="closeAdminModal()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-2xl font-bold text-sm">إلغاء</button>
                 </div>
             </form>
         </div>
@@ -85,32 +94,31 @@
     <script>
         let isAdmin = false;
         
-        // المنتجات الافتراضية
         let defaultProducts = [
-            { name: "زيت حلوة 3 لتر", price: 175, cat: "زيوت وسمن", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" },
-            { name: "كمون حصى فاخر", price: 65, cat: "عطارة وبهارات", img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
-            { name: "أرز مصري 1كجم", price: 28, cat: "أرز ومكرونة", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
-            { name: "سمن بلدي 1كجم", price: 220, cat: "زيوت وسمن", img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" }
+            { name: "كمون حصى فاخر", price: 65, img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
+            { name: "أرز مصري 1كجم", price: 28, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
+            { name: "سمن بلدي 1كجم", price: 220, img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" }
         ];
 
-        let products = JSON.parse(localStorage.getItem("store_prods_v2")) || defaultProducts;
-        let cart = JSON.parse(localStorage.getItem("store_cart_v2")) || [];
+        let products = JSON.parse(localStorage.getItem("almabbeh_prods")) || defaultProducts;
+        let cart = JSON.parse(localStorage.getItem("almabbeh_cart")) || [];
 
-        function toggleAdminPanel() {
+        function openAdminModal() {
             if (!isAdmin) {
                 let pass = prompt("أدخل الرقم السري للإدارة:");
                 if (pass === "Almabbeh@2026#Admin") {
                     isAdmin = true;
-                    document.getElementById("admin-panel").classList.remove("hidden");
-                    render();
+                    document.getElementById("admin-modal").classList.remove("hidden");
                 } else if (pass !== null) {
                     alert("الرقم السري غير صحيح!");
                 }
             } else {
-                isAdmin = false;
-                document.getElementById("admin-panel").classList.add("hidden");
-                render();
+                document.getElementById("admin-modal").classList.remove("hidden");
             }
+        }
+
+        function closeAdminModal() {
+            document.getElementById("admin-modal").classList.add("hidden");
         }
 
         function render() {
@@ -127,47 +135,50 @@
                 <div class="bg-white rounded-2xl shadow-sm border p-4 flex flex-col justify-between">
                     <div>
                         <img src="${p.img}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500'">
-                        <span class="bg-emerald-50 text-emerald-800 text-xs px-2 py-1 rounded-md font-bold">${p.cat}</span>
-                        <h4 class="font-black text-gray-900 mt-2">${p.name}</h4>
+                        <h4 class="font-black text-gray-900 mt-2 text-lg">${p.name}</h4>
                     </div>
                     <div class="mt-4">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-emerald-700 font-black text-lg">${p.price} ج.م</span>
-                            <button onclick="addToCart(${idx})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">🛒 أضف</button>
+                            <span class="text-emerald-700 font-black text-xl">${p.price} ج.م</span>
+                            <button onclick="addToCart(${idx})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">🛒 أضف</button>
                         </div>
                         ${isAdmin ? `
-                        <div class="flex gap-1 border-t pt-2">
-                            <button onclick="deleteProduct(${idx})" class="w-full bg-red-50 text-red-600 py-1 rounded-lg text-xs font-bold">🗑️ حذف المنتج</button>
+                        <div class="border-t pt-2">
+                            <button onclick="deleteProduct(${idx})" class="w-full bg-red-50 hover:bg-red-100 text-red-600 py-1.5 rounded-xl text-xs font-bold">🗑️ حذف المنتج</button>
                         </div>` : ''}
                     </div>
                 </div>
             `).join("");
         }
 
-        function saveProduct(e) {
+        function saveNewProduct(e) {
             e.preventDefault();
             let name = document.getElementById("p-name").value;
             let price = Number(document.getElementById("p-price").value);
-            let cat = document.getElementById("p-cat").value;
+            let fileInput = document.getElementById("p-img");
 
-            // إضافة المنتج فوراً للذاكرة وتحديث الشاشة بدون أخطاء صور
-            products.push({ 
-                name: name, 
-                price: price, 
-                cat: cat, 
-                img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500" 
-            });
-            
-            localStorage.setItem("store_prods_v2", JSON.stringify(products));
-            document.getElementById("product-form").reset();
-            render();
-            alert("✅ تمت إنجاز الإضافة وظهور المنتج في الموقع بنجاح!");
+            if (fileInput.files && fileInput.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    products.push({
+                        name: name,
+                        price: price,
+                        img: event.target.result
+                    });
+                    localStorage.setItem("almabbeh_prods", JSON.stringify(products));
+                    render();
+                    closeAdminModal();
+                    e.target.reset();
+                    alert("✅ تمت إضافة المنتج بنجاح!");
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
         }
 
         function deleteProduct(idx) {
             if (confirm("هل تريد حذف هذا المنتج نهائياً؟")) {
                 products.splice(idx, 1);
-                localStorage.setItem("store_prods_v2", JSON.stringify(products));
+                localStorage.setItem("almabbeh_prods", JSON.stringify(products));
                 render();
             }
         }
@@ -188,7 +199,7 @@
         }
 
         function saveCart() {
-            localStorage.setItem("store_cart_v2", JSON.stringify(cart));
+            localStorage.setItem("almabbeh_cart", JSON.stringify(cart));
             renderCart();
         }
 
@@ -228,7 +239,6 @@
 
         function openCart() {
             document.getElementById("cart-drawer").classList.remove("-translate-x-full");
-            document.getElementById("cart5-overlay")?.classList.remove("hidden");
             document.getElementById("cart-overlay").classList.remove("hidden");
             renderCart();
         }
@@ -248,7 +258,7 @@
                 alert("السلة فارغة!");
                 return;
             }
-            let msg = "🛒 *طلب جديد من المتجر:*\n\n";
+            let msg = "🛒 *طلب جديد من متجر عطارة المحبة والإيمان:*\n\n";
             let total = 0;
             cart.forEach(i => {
                 msg += `- ${i.name} (الكمية: ${i.qty}) = ${i.price * i.qty} ج\n`;
