@@ -11,7 +11,7 @@
 <body class="bg-gray-50 min-h-screen flex flex-col">
 
     <!-- الهيدر -->
-    <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50">
+    <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50 border-b border-emerald-800">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-800 p-2.5 rounded-2xl shadow-inner text-xl">🌿</div>
@@ -20,19 +20,15 @@
                     <p class="text-xs text-emerald-300 font-medium">جودة أصلية وتوصيل لحد باب البيت</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="openAddModal()" class="bg-amber-500 hover:bg-amber-600 text-emerald-950 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md flex items-center gap-1.5 transition">
-                    ➕ إضافة منتج جديد
-                </button>
-                <button onclick="toggleCart()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 shadow-md transition">
-                    🛒 السلة <span class="bg-emerald-900 px-2 py-0.5 rounded-full text-xs text-emerald-200" id="cart-count">0</span>
-                </button>
-            </div>
+            <button onclick="toggleCart()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 shadow-md transition transform active:scale-95">
+                🛒 السلة <span class="bg-emerald-900 px-2 py-0.5 rounded-full text-xs text-emerald-200" id="cart-count">0</span>
+            </button>
         </div>
     </header>
 
     <!-- المحتوى الرئيسي -->
     <main class="max-w-7xl mx-auto px-4 py-10 flex-1 w-full">
+        <!-- شريط البحث والعنوان -->
         <div class="mb-10 flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
             <div>
                 <h2 class="text-2xl font-black text-gray-800 mb-1">قائمة المنتجات والعروض</h2>
@@ -46,34 +42,9 @@
 
         <!-- شبكة المنتجات -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- المنتجات ستظهر هنا أوتوماتيكياً -->
+            <div class="col-span-full text-center py-16 text-emerald-800 font-bold">جاري تحميل المنتجات من الجدول... 🌿</div>
         </div>
     </main>
-
-    <!-- نافذة إضافة منتج جديد -->
-    <div id="add-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-gray-100">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 class="font-black text-lg text-emerald-900">➕ إضافة منتج جديد للمتجر</h3>
-                <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">اسم المنتج</label>
-                    <input type="text" id="new-name" placeholder="مثال: فلفل أسود حصى 250جم" class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">السعر (بالجنيه)</label>
-                    <input type="number" id="new-price" placeholder="مثال: 50" class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">اختر صورة المنتج من جهازك 📷</label>
-                    <input type="file" id="new-img-file" accept="image/*" class="w-full bg-gray-50 border border-gray-200 px-3 py-2 rounded-xl text-xs focus:outline-none focus:border-emerald-600 cursor-pointer">
-                </div>
-                <button onclick="addNewProduct()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold shadow-md transition mt-2">حفظ وإضافة المنتج</button>
-            </div>
-        </div>
-    </div>
 
     <!-- سلة المشتريات الجانبية -->
     <div id="cart-overlay" onclick="toggleCart()" class="hidden fixed inset-0 bg-black/60 z-50"></div>
@@ -82,13 +53,15 @@
             <h3 class="font-black text-xl text-emerald-900">🛒 سلة المشتريات</h3>
             <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center font-bold">✕</button>
         </div>
+        
         <div id="cart-items" class="flex-1 overflow-y-auto space-y-3 mb-4 pr-1">
             <p class="text-center text-gray-400 py-16 text-sm">السلة فارغة حالياً</p>
         </div>
+
         <div class="border-t pt-4">
             <div class="flex justify-between items-center font-black text-lg mb-4 bg-emerald-50 p-4 rounded-2xl">
-                <span>الإجمالي:</span>
-                <span id="cart-total" class="text-emerald-700">0 ج.م</span>
+                <span class="text-gray-700 text-base">الإجمالي الكلي:</span>
+                <span id="cart-total" class="text-emerald-700 text-xl">0 ج.م</span>
             </div>
             <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold shadow-md mb-2 transition">📱 إرسال الطلب عبر واتساب</button>
             <button onclick="clearCart()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 py-2.5 rounded-2xl font-bold text-xs">تفريغ السلة</button>
@@ -101,20 +74,57 @@
     </footer>
 
     <script>
-        const defaultProducts = [
-            { id: 1, name: "كمون حصى فاخر", price: 65, img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
-            { id: 2, name: "أرز مصري رفيع 1كجم", price: 28, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
-            { id: 3, name: "سمن بلدي أصلي 1كجم", price: 220, img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" },
-            { id: 4, name: "زيت طعام ممتاز 1لتر", price: 75, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" }
-        ];
+        // رابط جدول جوجل الخاص بك
+        const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSaro348LNCBUevIQooPlwmYPX5VKOPWuronOhfypVLm_zf_kWjCuFKzyiqF8Hf-6siAAWQU6z5twh/pub?output=csv";
 
-        let products = JSON.parse(localStorage.getItem('store_products')) || defaultProducts;
+        let products = [];
         let cart = [];
+
+        // تحويل نص CSV إلى مصفوفة منتجات
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            if (lines.length < 2) return [];
+
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            const nameIdx = headers.indexOf('name');
+            const priceIdx = headers.indexOf('price');
+            const imgIdx = headers.indexOf('img');
+
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const row = lines[i].split(',').map(cell => cell.trim());
+                
+                const name = row[nameIdx] || 'منتج بدون اسم';
+                const price = parseFloat(row[priceIdx]) || 0;
+                let img = row[imgIdx] || '';
+
+                if (!img || !img.startsWith('http')) {
+                    img = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500';
+                }
+
+                result.push({ id: i, name, price, img });
+            }
+            return result;
+        }
+
+        // جلب البيانات تلقائياً من جوجل شيت
+        async function fetchProductsFromSheet() {
+            try {
+                const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
+                const data = await response.text();
+                products = parseCSV(data);
+                displayProducts(products);
+            } catch (error) {
+                console.error("خطأ في جلب الشيت:", error);
+                document.getElementById("product-grid").innerHTML = `<p class="col-span-full text-center text-red-500 py-10">تعذر تحميل المنتجات، يرجى التأكد من اتصال الإنترنت.</p>`;
+            }
+        }
 
         function displayProducts(items) {
             const grid = document.getElementById("product-grid");
-            if (items.length === 0) {
-                grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-16">لا توجد منتجات متاحة حالياً.</p>`;
+            if (!items || items.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-16">لا توجد منتجات متاحة حالياً في الشيت.</p>`;
                 return;
             }
 
@@ -128,68 +138,10 @@
                     </div>
                     <div class="pt-3 border-t border-gray-50 flex items-center justify-between">
                         <span class="text-emerald-700 font-black text-lg">${p.price} <span class="text-xs text-gray-500 font-normal">ج.م</span></span>
-                        <div class="flex gap-2">
-                            <button onclick="deleteProduct(${p.id})" class="bg-red-50 hover:bg-red-100 text-red-600 px-2.5 py-2 rounded-xl text-xs font-bold transition" title="حذف المنتج">🗑️</button>
-                            <button onclick="addToCart(${p.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md transition">🛒 أضف</button>
-                        </div>
+                        <button onclick="addToCart(${p.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md transition">🛒 أضف للسلة</button>
                     </div>
                 </div>
             `).join("");
-        }
-
-        function openAddModal() { document.getElementById('add-modal').classList.remove('hidden'); }
-        function closeAddModal() { document.getElementById('add-modal').classList.add('hidden'); }
-
-        // إضافة منتج بقراءة ملف الصورة المباشرة من جهازك
-        function addNewProduct() {
-            const name = document.getElementById('new-name').value.trim();
-            const price = parseFloat(document.getElementById('new-price').value);
-            const fileInput = document.getElementById('new-img-file');
-
-            if (!name || isNaN(price)) {
-                alert("الرجاء إدخال اسم المنتج والسعر بشكل صحيح!");
-                return;
-            }
-
-            const saveProduct = (imgData) => {
-                const newProduct = {
-                    id: Date.now(),
-                    name: name,
-                    price: price,
-                    img: imgData || "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500"
-                };
-
-                products.push(newProduct);
-                try {
-                    localStorage.setItem('store_products', JSON.stringify(products));
-                } catch (e) {
-                    alert("حجم الصور المرفوقة كبير جداً، يرجى اختيار صورة بحجم أصغر.");
-                }
-                displayProducts(products);
-                closeAddModal();
-
-                document.getElementById('new-name').value = '';
-                document.getElementById('new-price').value = '';
-                fileInput.value = '';
-            };
-
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    saveProduct(e.target.result);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                saveProduct(null);
-            }
-        }
-
-        function deleteProduct(id) {
-            if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('store_products', JSON.stringify(products));
-                displayProducts(products);
-            }
         }
 
         function filterProducts() {
@@ -200,6 +152,7 @@
 
         function addToCart(id) {
             const product = products.find(p => p.id === id);
+            if (!product) return;
             const existing = cart.find(item => item.id === id);
             if (existing) { existing.qty++; } else { cart.push({ ...product, qty: 1 }); }
             updateCartUI();
@@ -264,7 +217,7 @@
             window.open(`https://wa.me/201140950468?text=` + encodeURIComponent(message), '_blank');
         }
 
-        displayProducts(products);
+        fetchProductsFromSheet();
     </script>
 </body>
 </html>
