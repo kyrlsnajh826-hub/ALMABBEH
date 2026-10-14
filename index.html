@@ -221,3 +221,228 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عطارة المحبة والإيمان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; background: #f8fafc; }</style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+    <!-- الهيدر -->
+    <header class="bg-emerald-900 text-white shadow-lg sticky top-0 z-50 border-b border-emerald-800">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-800 p-2.5 rounded-2xl shadow-inner text-xl">🌿</div>
+                <div>
+                    <h1 class="text-lg sm:text-2xl font-black tracking-wide">عطارة المحبة والإيمان</h1>
+                    <p class="text-xs text-emerald-300 font-medium">جودة أصلية وتوصيل لحد باب البيت</p>
+                </div>
+            </div>
+            <button onclick="toggleCart()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 shadow-md transition transform active:scale-95">
+                🛒 السلة <span class="bg-emerald-900 px-2 py-0.5 rounded-full text-xs text-emerald-200" id="cart-count">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 py-10 flex-1 w-full">
+        <div class="mb-10 flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <div>
+                <h2 class="text-2xl font-black text-gray-800 mb-1">قائمة المنتجات والعروض</h2>
+                <p class="text-xs text-gray-400">اختر ما يناسبك واطلب بسهولة عبر الواتساب</p>
+            </div>
+            <div class="relative w-full md:w-80">
+                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">🔍</span>
+                <input type="text" id="searchBox" oninput="filterProducts()" placeholder="ابحث عن أي منتج..." class="bg-gray-50 border border-gray-200 pr-11 pl-4 py-3 rounded-2xl w-full text-sm focus:outline-none focus:border-emerald-600 transition">
+            </div>
+        </div>
+
+        <!-- شبكة المنتجات -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-16 text-emerald-800 font-bold">جاري تحميل المنتجات من الشيت... 🌿</div>
+        </div>
+    </main>
+
+    <!-- سلة المشتريات الجانبية -->
+    <div id="cart-overlay" onclick="toggleCart()" class="hidden fixed inset-0 bg-black/60 z-50"></div>
+    <div id="cart-drawer" class="fixed top-0 left-0 h-full w-80 sm:w-96 bg-white z-50 shadow-2xl p-6 flex flex-col -translate-x-full transition-transform duration-300">
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h3 class="font-black text-xl text-emerald-900">🛒 سلة المشتريات</h3>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center font-bold">✕</button>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto space-y-3 mb-4 pr-1">
+            <p class="text-center text-gray-400 py-16 text-sm">السلة فارغة حالياً</p>
+        </div>
+
+        <div class="border-t pt-4">
+            <div class="flex justify-between items-center font-black text-lg mb-4 bg-emerald-50 p-4 rounded-2xl">
+                <span class="text-gray-700 text-base">الإجمالي الكلي:</span>
+                <span id="cart-total" class="text-emerald-700 text-xl">0 ج.م</span>
+            </div>
+            <button onclick="checkoutWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold shadow-md mb-2 transition">📱 إرسال الطلب عبر واتساب</button>
+            <button onclick="clearCart()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 py-2.5 rounded-2xl font-bold text-xs">تفريغ السلة</button>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="bg-emerald-950 text-emerald-200 py-8 text-center text-xs mt-16 border-t border-emerald-900">
+        <p>جميع الحقوق محفوظة © عطارة المحبة والإيمان 2026</p>
+    </footer>
+
+    <script>
+        const sheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSaro348LNCBUevIQooPlwmYPX5VKOPWuronOhfypVLm_zf_kWjCuFKzyiqF8Hf-6siAAWQU6z5twh/pub?output=csv";
+
+        let products = [];
+        let cart = [];
+
+        // دالة احترافية لتقسيم السطور والعناوين من الشيت بدون أخطاء
+        function parseCSV(text) {
+            const lines = text.split(/\r\n|\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length < 2) return [];
+
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+            
+            let nameIdx = headers.findIndex(h => h.includes('name') || h.includes('اسم'));
+            let priceIdx = headers.findIndex(h => h.includes('price') || h.includes('سعر'));
+            let imgIdx = headers.findIndex(h => h.includes('img') || h.includes('صورة') || h.includes('صوره'));
+
+            if (nameIdx === -1) nameIdx = 0;
+            if (priceIdx === -1) priceIdx = 1;
+            if (imgIdx === -1) imgIdx = 2;
+
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                // التعامل مع الفواصل داخل النص
+                const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim().replace(/^"\vert{}"$/g, ''));
+                
+                const name = row[nameIdx] || 'منتج جديد';
+                const price = parseFloat(row[priceIdx]) || 0;
+                let img = row[imgIdx] || '';
+
+                if (!img || !img.startsWith('http')) {
+                    img = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500';
+                }
+
+                result.push({ id: i, name, price, img });
+            }
+            return result;
+        }
+
+        async function fetchProductsFromSheet() {
+            try {
+                const response = await fetch(sheetCsvUrl + '&t=' + new Date().getTime());
+                const data = await response.text();
+                products = parseCSV(data);
+                displayProducts(products);
+            } catch (error) {
+                console.error("خطأ في جلب الشيت:", error);
+                document.getElementById("product-grid").innerHTML = `<p class="col-span-full text-center text-red-500 py-10">تعذر تحميل المنتجات من الشيت.</p>`;
+            }
+        }
+
+        function displayProducts(items) {
+            const grid = document.getElementById("product-grid");
+            if (!items || items.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-16">لا توجد منتجات متاحة حالياً في الشيت.</p>`;
+                return;
+            }
+
+            grid.innerHTML = items.map(p => `
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 flex flex-col justify-between hover:shadow-xl transition duration-300">
+                    <div>
+                        <div class="overflow-hidden rounded-2xl mb-4 bg-gray-50 h-44">
+                            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500'">
+                        </div>
+                        <h3 class="font-black text-gray-800 text-base mb-2">${p.name}</h3>
+                    </div>
+                    <div class="pt-3 border-t border-gray-50 flex items-center justify-between">
+                        <span class="text-emerald-700 font-black text-lg">${p.price} <span class="text-xs text-gray-500 font-normal">ج.م</span></span>
+                        <button onclick="addToCart(${p.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md transition">🛒 أضف للسلة</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function filterProducts() {
+            const query = document.getElementById("searchBox").value.toLowerCase();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+            displayProducts(filtered);
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            const existing = cart.find(item => item.id === id);
+            if (existing) { existing.qty++; } else { cart.push({ ...product, qty: 1 }); }
+            updateCartUI();
+            toggleCart();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById("cart-items");
+            const countEl = document.getElementById("cart-count");
+            const totalEl = document.getElementById("cart-total");
+            let totalCount = 0, totalPrice = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-400 py-16 text-sm">السلة فارغة حالياً</p>`;
+                countEl.innerText = "0"; totalEl.innerText = "0 ج.م";
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => {
+                totalCount += item.qty;
+                totalPrice += item.price * item.qty;
+                return `
+                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-2xl border text-sm">
+                        <div>
+                            <p class="font-bold text-gray-800">${item.name}</p>
+                            <p class="text-xs text-emerald-700 font-bold">${item.price} ج × ${item.qty}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${index}, 1)" class="w-6 h-6 bg-white border rounded-lg font-bold">+</button>
+                            <span>${item.qty}</span>
+                            <button onclick="changeQty(${index}, -1)" class="w-6 h-6 bg-white border rounded-lg font-bold">-</button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            countEl.innerText = totalCount;
+            totalEl.innerText = totalPrice + " ج.م";
+        }
+
+        function changeQty(index, amount) {
+            cart[index].qty += amount;
+            if (cart[index].qty <= 0) cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function clearCart() { cart = []; updateCartUI(); }
+        function toggleCart() {
+            document.getElementById("cart-drawer").classList.toggle("-translate-x-full");
+            document.getElementById("cart-overlay").classList.toggle("hidden");
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) { alert("السلة فارغة!"); return; }
+            let message = "🛒 *طلب جديد من متجر عطارة المحبة والإيمان:*\n\n";
+            let total = 0;
+            cart.forEach(item => {
+                message += `▪️ ${item.name} (الكمية: ${item.qty}) = ${item.price * item.qty} ج.م\n`;
+                total += item.price * item.qty;
+            });
+            message += `\n💰 *الإجمالي الكلي:* ${total} جنيه مصري`;
+            window.open(`https://wa.me/201140950468?text=` + encodeURIComponent(message), '_blank');
+        }
+
+        fetchProductsFromSheet();
+    </script>
+</body>
+</html>
