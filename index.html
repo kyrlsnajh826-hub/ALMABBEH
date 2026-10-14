@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+كد<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -20,15 +20,20 @@
                     <p class="text-xs text-emerald-300 font-medium">جودة أصلية وتوصيل لحد باب البيت</p>
                 </div>
             </div>
-            <button onclick="toggleCart()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 shadow-md transition transform active:scale-95">
-                🛒 السلة <span class="bg-emerald-900 px-2 py-0.5 rounded-full text-xs text-emerald-200" id="cart-count">0</span>
-            </button>
+            <div class="flex items-center gap-3">
+                <button onclick="openAddModal()" class="bg-amber-500 hover:bg-amber-600 text-emerald-950 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md flex items-center gap-1.5 transition">
+                    ➕ إضافة منتج جديد
+                </button>
+                <button onclick="toggleCart()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 shadow-md transition">
+                    🛒 السلة <span class="bg-emerald-900 px-2 py-0.5 rounded-full text-xs text-emerald-200" id="cart-count">0</span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- المحتوى الرئيسي -->
     <main class="max-w-7xl mx-auto px-4 py-10 flex-1 w-full">
-        <!-- شريط البحث وعنوان القسم -->
+        <!-- شريط البحث -->
         <div class="mb-10 flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
             <div>
                 <h2 class="text-2xl font-black text-gray-800 mb-1">قائمة المنتجات والعروض</h2>
@@ -42,11 +47,36 @@
 
         <!-- شبكة المنتجات -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- المنتجات ستظهر هنا أوتوماتيكياً -->
+            <!-- المنتجات ستظهر هنا -->
         </div>
     </main>
 
-    <!-- سلة المشتريات الجانبية -->
+    <!-- نافذة إضافة منتج جديد مباشرة من الموقع -->
+    <div id="add-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-gray-100">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h3 class="font-black text-lg text-emerald-900">➕ إضافة منتج جديد للمتجر</h3>
+                <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">اسم المنتج</label>
+                    <input type="text" id="new-name" placeholder="مثال: مكرونة الراعي" class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">السعر (بالجنيه)</label>
+                    <input type="number" id="new-price" placeholder="مثال: 10" class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">رابط صورة المنتج (URL)</label>
+                    <input type="text" id="new-img" placeholder="ضع رابط الصورة هنا" class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-600">
+                </div>
+                <button onclick="addNewProduct()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold shadow-md transition mt-2">حفظ وإضافة المنتج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- سلة المشتريات -->
     <div id="cart-overlay" onclick="toggleCart()" class="hidden fixed inset-0 bg-black/60 z-50"></div>
     <div id="cart-drawer" class="fixed top-0 left-0 h-full w-80 sm:w-96 bg-white z-50 shadow-2xl p-6 flex flex-col -translate-x-full transition-transform duration-300">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
@@ -74,23 +104,20 @@
     </footer>
 
     <script>
-        // قائمة المنتجات الأساسية للمتجر
-        const products = [
-            { id: 1, name: "مكرونة فاخرة 1كجم", price: 24, img: "https://images.unsplash.com/photo-1621996346565-e3d5d6288590?w=500" },
+        const defaultProducts = [
+            { id: 1, name: "مكرونة الراعي", price: 10, img: "https://images.unsplash.com/photo-1621996346565-e3d5d6288590?w=500" },
             { id: 2, name: "كمون حصى فاخر", price: 65, img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
             { id: 3, name: "أرز مصري رفيع 1كجم", price: 28, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
-            { id: 4, name: "سمن بلدي أصلي 1كجم", price: 220, img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" },
-            { id: 5, name: "زيت طعام ممتاز 1لتر", price: 75, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" },
-            { id: 6, name: "كركديه أسواني فاخر", price: 120, img: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500" },
-            { id: 7, name: "عدس مجروش 1كجم", price: 50, img: "https://images.unsplash.com/photo-1585998006296-9eb62f59d18f?w=500" }
+            { id: 4, name: "سمن بلدي أصلي 1كجم", price: 220, img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" }
         ];
 
+        let products = JSON.parse(localStorage.getItem('my_store_prods')) || defaultProducts;
         let cart = [];
 
         function displayProducts(items) {
             const grid = document.getElementById("product-grid");
             if (items.length === 0) {
-                grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-16">عذراً، لا توجد منتجات مطابقة لبحثك.</p>`;
+                grid.innerHTML = `<p class="col-span-full text-center text-gray-400 py-16">لا توجد منتجات مطابقة لبحثك.</p>`;
                 return;
             }
 
@@ -108,6 +135,35 @@
                     </div>
                 </div>
             `).join("");
+        }
+
+        function openAddModal() { document.getElementById('add-modal').classList.remove('hidden'); }
+        function closeAddModal() { document.getElementById('add-modal').classList.add('hidden'); }
+
+        // إضافة منتج مباشر بالاسم والسعر والصورة
+        function addNewProduct() {
+            const name = document.getElementById('new-name').value.trim();
+            const price = parseFloat(document.getElementById('new-price').value);
+            let img = document.getElementById('new-img').value.trim();
+
+            if (!name || isNaN(price)) {
+                alert("يرجى إدخال اسم المنتج والسعر بشكل صحيح!");
+                return;
+            }
+
+            if (!img) {
+                img = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500";
+            }
+
+            const newProd = { id: Date.now(), name, price, img };
+            products.unshift(newProd);
+            localStorage.setItem('my_store_prods', JSON.stringify(products));
+            displayProducts(products);
+            closeAddModal();
+
+            document.getElementById('new-name').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-img').value = '';
         }
 
         function filterProducts() {
