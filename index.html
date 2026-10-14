@@ -74,19 +74,19 @@
     </footer>
 
     <script>
-        // قائمة المنتجات الثابتة والجاهزة للظهور فوراً لكل العملاء
+        // قائمة المنتجات الأساسية للمتجر
         const products = [
-            { id: 1, name: "كمون حصى فاخر", price: 65, img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
-            { id: 2, name: "أرز مصري رفيع 1كجم", price: 28, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
-            { id: 3, name: "سمن بلدي أصلي 1كجم", price: 220, img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" },
-            { id: 4, name: "زيت طعام ممتاز 1لتر", price: 75, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" },
-            { id: 5, name: "كركديه أسواني فاخر", price: 120, img: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500" },
-            { id: 6, name: "عدس مجروش 1كجم", price: 50, img: "https://images.unsplash.com/photo-1585998006296-9eb62f59d18f?w=500" }
+            { id: 1, name: "مكرونة فاخرة 1كجم", price: 24, img: "https://images.unsplash.com/photo-1621996346565-e3d5d6288590?w=500" },
+            { id: 2, name: "كمون حصى فاخر", price: 65, img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500" },
+            { id: 3, name: "أرز مصري رفيع 1كجم", price: 28, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500" },
+            { id: 4, name: "سمن بلدي أصلي 1كجم", price: 220, img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=500" },
+            { id: 5, name: "زيت طعام ممتاز 1لتر", price: 75, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500" },
+            { id: 6, name: "كركديه أسواني فاخر", price: 120, img: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500" },
+            { id: 7, name: "عدس مجروش 1كجم", price: 50, img: "https://images.unsplash.com/photo-1585998006296-9eb62f59d18f?w=500" }
         ];
 
         let cart = [];
 
-        // عرض المنتجات بشكل مرتب
         function displayProducts(items) {
             const grid = document.getElementById("product-grid");
             if (items.length === 0) {
@@ -110,14 +110,12 @@
             `).join("");
         }
 
-        // البحث الفوري
         function filterProducts() {
             const query = document.getElementById("searchBox").value.toLowerCase();
             const filtered = products.filter(p => p.name.toLowerCase().includes(query));
             displayProducts(filtered);
         }
 
-        // إضافة للسلة
         function addToCart(id) {
             const product = products.find(p => p.id === id);
             const existing = cart.find(item => item.id === id);
@@ -126,7 +124,6 @@
             toggleCart();
         }
 
-        // تحديث واجهة السلة
         function updateCartUI() {
             const container = document.getElementById("cart-items");
             const countEl = document.getElementById("cart-count");
@@ -185,7 +182,6 @@
             window.open(`https://wa.me/201140950468?text=` + encodeURIComponent(message), '_blank');
         }
 
-        // التشغيل الأول
         displayProducts(products);
     </script>
 </body>
